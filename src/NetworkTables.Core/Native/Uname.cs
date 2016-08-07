@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 // ReSharper disable InconsistentNaming
 
-namespace NetworkTables.Native
+namespace NetworkTables.Core.Native
 {
     [ExcludeFromCodeCoverage]
     internal sealed class Utsname

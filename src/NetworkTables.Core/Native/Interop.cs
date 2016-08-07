@@ -5,7 +5,7 @@ using System.Security;
 // ReSharper disable InconsistentNaming
 // ReSharper disable NotAccessedField.Global
 
-namespace NetworkTables.Native
+namespace NetworkTables.Core.Native
 {
     internal class ExcludeFromCodeCoverageAttribute : Attribute
     {

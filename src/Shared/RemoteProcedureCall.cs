@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetworkTables.Wire;
 #if CORE
-using NetworkTables.Native;
+using NetworkTables.Core.Native;
 using System.Runtime.InteropServices;
 #endif
 

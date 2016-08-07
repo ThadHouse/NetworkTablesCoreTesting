@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace NetworkTables.Native
+namespace NetworkTables.Core.Native
 {
     enum OsType
     {

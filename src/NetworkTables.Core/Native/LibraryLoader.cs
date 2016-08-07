@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace NetworkTables.Native
+namespace NetworkTables.Core.Native
 {
     internal interface ILibraryLoader
     {

@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using NetworkTables.Exceptions;
 
-namespace NetworkTables.Native
+namespace NetworkTables.Core.Native
 {
     /// <summary>
     /// This class contains all the methods to interface with the native library.

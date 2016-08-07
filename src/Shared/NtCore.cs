@@ -5,7 +5,7 @@ using NetworkTables.Exceptions;
 using NetworkTables.Logging;
 #endif
 #if CORE
-using NetworkTables.Native;
+using NetworkTables.Core.Native;
 #endif
 
 namespace NetworkTables

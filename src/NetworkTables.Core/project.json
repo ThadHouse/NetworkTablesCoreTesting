@@ -1,6 +1,6 @@
 {
   "version": "2017.0.1",
-  "title": "FRC NetworkTables",
+  "title": "FRC NetworkTables.Core",
   "description": "A Managed version of the NetworkTables3 Protocol.",
   "copyright": "Copyright 2016 RobotDotNet",
   "authors": [
@@ -13,6 +13,7 @@
     "authors": [
       "RobotDotNet"
     ],
+    "id": "FRC.NetworkTables.Core",
     "tags": [ "WPILib", "FRC", "FIRST", "RoboRio" ],
     "requireLicenseAcceptance": false,
     "projectUrl": "https://github.com/robotdotnet/NetworkTables",
@@ -24,6 +25,15 @@
     }
   },
   "buildOptions": {
+    "embed": [
+      "NativeLibraries/roborio/libntcore.so",
+      "NativeLibraries/amd64/libntcore.dylib",
+      "NativeLibraries/amd64/libntcore.so",
+      "NativeLibraries/amd64/ntcore.dll",
+      "NativeLibraries/x86/libntcore.dylib",
+      "NativeLibraries/x86/libntcore.so",
+      "NativeLibraries/x86/ntcore.dll"
+    ],
     "compile": {
       "includeFiles": [
         "../Shared/Value.cs",
@@ -60,10 +70,6 @@
     }
   },
   "configurations": {
-    "ArmStandalone": {
-      "xmlDoc": true,
-      "define": [ "ARMSTANDALONE" ]
-    },
     "Release": {
       "xmlDoc": true
     },

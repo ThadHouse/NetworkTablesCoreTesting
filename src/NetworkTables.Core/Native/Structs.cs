@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace NetworkTables.Native
+namespace NetworkTables.Core.Native
 {
 
     [StructLayout(LayoutKind.Sequential)]
