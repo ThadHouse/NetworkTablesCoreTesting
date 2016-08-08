@@ -90,7 +90,7 @@ $updatedxml = $false
 function UploadAppVeyorTestResults {
  # upload results to AppVeyor
   $wc = New-Object 'System.Net.WebClient'
-  $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\xunit-results.xml))
+  $wc.UploadFile("https://ci.appveyor.com/api/testresults/nunit3/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\TestResult.xml))
 }
 
 function Build {
@@ -121,8 +121,8 @@ function Test {
     # install CodeCov
     .\NuGet.exe install OpenCover -Version $OpenCoverVersion -OutputDirectory buildTemp
     
-    .\buildTemp\OpenCover$OpenCoverVersion\tools\OpenCover.Console.exe -register:user -target:nunit3-console.exe -targetargs:".test\NetworkTables.Test\$libLoc\netcoreapp1.0\NetworkTables.Test.dll --framework=net-4.5.1 " -filter:"+[Network*]* -[NetworkTables.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
-    .\buildTemp\OpenCover$OpenCoverVersion\tools\OpenCover.Console.exe -register:user -target:nunit3-console.exe -targetargs:".test\NetworkTables.Core.Test\$libLoc\netcoreapp1.0\NetworkTables.Core.Test.dll --framework=net-4.5.1 " -filter:"+[Network*]* -[NetworkTables.Core.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
+    .\buildTemp\OpenCover\$OpenCoverVersion\tools\OpenCover.Console.exe -register:user -target:nunit3-console.exe -targetargs:".test\NetworkTables.Test\$libLoc\netcoreapp1.0\NetworkTables.Test.dll --framework=net-4.5.1 " -filter:"+[Network*]* -[NetworkTables.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
+    .\buildTemp\OpenCover\$OpenCoverVersion\tools\OpenCover.Console.exe -register:user -target:nunit3-console.exe -targetargs:".test\NetworkTables.Core.Test\$libLoc\netcoreapp1.0\NetworkTables.Core.Test.dll --framework=net-4.5.1 " -filter:"+[Network*]* -[NetworkTables.Core.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
     
     nunit3-console.exe test\NetworkTables.Core.Test\$libLoc\netcoreapp1.0\NetworkTables.Core.Test.dll --framework=net-4.5.1 --x86
     
