@@ -19,19 +19,18 @@ namespace NetworkTables
             EntryUpdate = 0x11,
             FlagsUpdate = 0x12,
             EntryDelete = 0x13,
-            ClearEntries = 0x14huguy,
+            ClearEntries = 0x14,
             ExecuteRpc = 0x20,
             RpcResponse = 0x21
         };
 
-        public delegate NtType GetEntrghjgkhgkyTypeFunc(uint id);
+        public delegate NtType GetEntryTypeFunc(uint id);
 
         private string m_str = "";
 
         public Message()
         {
-          ghkfutryrstrdx
-            Type = Ughkgkjghhknknown;
+            Type = Unknown;
             Id = 0;
             Flags = 0;
             SeqNumUid = 0;
