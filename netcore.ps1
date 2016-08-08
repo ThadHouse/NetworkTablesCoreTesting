@@ -207,11 +207,17 @@ if ($env:APPVEYOR) {
 
  #Supress compiler xml warnings
   $netTablesJson = Get-Content 'src\NetworkTables\project.json' -raw | ConvertFrom-Json
+  try{
   $netTablesJson.buildOptions | Add-Member -Name "nowarn" -value @("CS1591") -MemberType NoteProperty
+    }
+  catch {}
   $netTablesJson | ConvertTo-Json -Depth 5 | Set-Content 'src\NetworkTables\project.json'
   
   $netTablesJson = Get-Content 'src\NetworkTables.Core\project.json' -raw | ConvertFrom-Json
+  try{
   $netTablesJson.buildOptions | Add-Member -Name "nowarn" -value @("CS1591") -MemberType NoteProperty
+  }
+  catch {}
   $netTablesJson | ConvertTo-Json -Depth 5 | Set-Content 'src\NetworkTables.Core\project.json'
 }
 

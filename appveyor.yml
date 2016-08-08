@@ -12,7 +12,7 @@ on_success:
 - ps: >-
     If (($env:APPVEYOR_REPO_BRANCH -eq "master") -and (!$env:APPVEYOR_PULL_REQUEST_NUMBER)) {
 
-    .\netcore.psi -updatexml -pack #$isRelease
+    .\netcore.ps1 -updatexml -pack 
 
 
     }
