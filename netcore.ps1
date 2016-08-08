@@ -197,6 +197,17 @@ function UpdateXml {
    Copy-Item Sandcastle\Help\NetworkTables.Core.xml src\NetworkTables.Core\$libLoc\netstandard1.5\NetworkTables.Core.xml
 }
 
+if ($APPVEYOR) {
+ #Supress compiler xml warnings
+  $netTablesJson = Get-Content 'src\NetworkTables\project.json' -raw | ConvertFrom-Json
+  $netTablesJson.buildOptions | Add-Member -Name "nowarn" -value @("CS1591") -MemberType NoteProperty
+  $netTablesJson | ConvertTo-Json -Depth 5 | Set-Content 'src\NetworkTables\project.json'
+  
+  $netTablesJson = Get-Content 'src\NetworkTables.Core\project.json' -raw | ConvertFrom-Json
+  $netTablesJson.buildOptions | Add-Member -Name "nowarn" -value @("CS1591") -MemberType NoteProperty
+  $netTablesJson | ConvertTo-Json -Depth 5 | Set-Content 'src\NetworkTables.Core\project.json'
+}
+
 if ($buildRelease) {
  if ((Test-Path .\buildTemp) -eq $false) {
   md .\buildTemp

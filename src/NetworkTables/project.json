@@ -64,9 +64,6 @@
     }
   },
   "configurations": {
-    "CI": {
-      "nowarn": [ "CS1591" ]
-    },
     "Debug": {
       "define": [ "DEBUG" ]
     }
