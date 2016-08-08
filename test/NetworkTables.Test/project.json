@@ -25,6 +25,12 @@
     }
   },
   "buildOptions": {
+    "exclude": [
+      "Output/",
+      "Exceptions/",
+      "Tables/",
+      "Wire/"
+    ],
     "nowarn": [ "CS0618" ]
   },
   "configurations": {

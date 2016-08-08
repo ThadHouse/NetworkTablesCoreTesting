@@ -18,4 +18,4 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("41be202a-b37e-4aba-8c90-3d1d2e1b1a0e")]
 
-[assembly: InternalsVisibleTo("NetworkTables.NtCore.Test")]
+[assembly: InternalsVisibleTo("NetworkTables.Core.Test")]

@@ -3,6 +3,7 @@
   "testRunner": "nunit",
   "dependencies": {
     "dotnet-test-nunit": "3.4.0-beta-1",
+    "Microsoft.CodeAnalysis.CSharp": "1.3.2",
     "Microsoft.NETCore.Platforms": "1.0.1",
     "NetworkTables.Core": {
       "target": "project"
@@ -10,7 +11,11 @@
     "NUnit": "3.4.1"
   },
   "frameworks": {
-    "net451": {}, 
+    "net451": {
+      "dependencies": {
+        "System.Threading.Tasks": "4.0.0"
+      }
+    }, 
     "netcoreapp1.0": {
       "imports": [
         "netcoreapp1.0",
@@ -25,6 +30,12 @@
     }
   },
   "buildOptions": {
+    "exclude": [
+      "Output/",
+      "Exceptions/",
+      "Tables/",
+      "Wire/"
+    ],
     "nowarn": [ "CS0618" ]
   },
   "configurations": {

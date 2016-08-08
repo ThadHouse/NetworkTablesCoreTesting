@@ -26,6 +26,12 @@
   },
   "buildOptions": {
     "compile": {
+      "exclude": [
+        "Output/",
+        "Exceptions/",
+        "Tables/",
+        "Wire/"
+      ],
       "include": [
         "../Shared/*.cs",
         "../Shared/Tables/*.cs",

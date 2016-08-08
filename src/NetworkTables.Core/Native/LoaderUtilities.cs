@@ -24,9 +24,7 @@ namespace NetworkTables.Core.Native
     {
         internal static bool Is64BitOs()
         {
-#pragma warning disable CS0618
-            return Marshal.SizeOf(typeof(IntPtr)) == 8;
-#pragma warning restore CS0618
+            return IntPtr.Size != sizeof(int);
         }
 
         internal static bool IsWindows()
@@ -88,34 +86,6 @@ internal static OsType GetOsType()
 
         internal static bool CheckOsValid(OsType type)
         {
-#if ARMSTANDALONE
-            switch (type)
-            {
-                case OsType.Windows32:
-                    return false;
-                case OsType.Windows64:
-                    return false;
-                case OsType.Linux32:
-                    return false;
-                case OsType.Linux64:
-                    return false;
-                case OsType.MacOs32:
-                    return false;
-                case OsType.MacOs64:
-                    return false;
-                case OsType.Armv6HardFloat:
-                    Console.WriteLine("Raspberry Pi 1 does work, however the library will not be often updated and will probably be out of date.");
-                    return true;
-                case OsType.Armv7HardFloat:
-                    return true;
-                case OsType.Android:
-                    return true; //The ArmV7 binary is not working currently for android. Need to get that working.
-                case OsType.RoboRio:
-                    return true;
-                default:
-                    return false;
-            }
-#else
             switch (type)
             {
                 case OsType.Windows32:
@@ -135,58 +105,37 @@ internal static OsType GetOsType()
                 case OsType.Armv7HardFloat:
                     return false;
                 case OsType.Android:
-                    return false; //The ArmV7 binary is not working currently for android. Need to get that working.
+                    return false; 
                 case OsType.RoboRio:
                     return true;
                 default:
                     return false;
             }
-#endif
         }
         internal static void GetLibraryName(OsType type, out string embeddedResourceLocation, out string extractLocation)
         {
             switch (type)
             {
                 case OsType.Windows32:
-                    embeddedResourceLocation = "NetworkTables.NativeLibraries.x86.ntcore.dll";
-                    //extractLocation = "ntcore.dll";
+                    embeddedResourceLocation = "NetworkTables.Core.NativeLibraries.x86.ntcore.dll";
                     break;
                 case OsType.Windows64:
-                    embeddedResourceLocation = "NetworkTables.NativeLibraries.amd64.ntcore.dll";
-                    //extractLocation = "ntcore.dll";
+                    embeddedResourceLocation = "NetworkTables.Core.NativeLibraries.amd64.ntcore.dll";
                     break;
                 case OsType.Linux32:
-                    embeddedResourceLocation = "NetworkTables.NativeLibraries.x86.libntcore.so";
-                    //extractLocation = "libntcore.so";
+                    embeddedResourceLocation = "NetworkTables.Core.NativeLibraries.x86.libntcore.so";
                     break;
                 case OsType.Linux64:
-                    embeddedResourceLocation = "NetworkTables.NativeLibraries.amd64.libntcore.so";
-                    //extractLocation = "libntcore.so";
+                    embeddedResourceLocation = "NetworkTables.Core.NativeLibraries.amd64.libntcore.so";
                     break;
                 case OsType.MacOs32:
-                    embeddedResourceLocation = "NetworkTables.NativeLibraries.x86.libntcore.dylib";
-                    //extractLocation = "libntcore.dylib";
+                    embeddedResourceLocation = "NetworkTables.Core.NativeLibraries.x86.libntcore.dylib";
                     break;
                 case OsType.MacOs64:
-                    embeddedResourceLocation = "NetworkTables.NativeLibraries.amd64.libntcore.dylib";
-                    //extractLocation = "libntcore.dylib";
+                    embeddedResourceLocation = "NetworkTables.Core.NativeLibraries.amd64.libntcore.dylib";
                     break;
                 case OsType.RoboRio:
-                    embeddedResourceLocation = "NetworkTables.NativeLibraries.roborio.libntcore.so";
-                    //extractLocation = "libntcore.so";
-                    break;
-                case OsType.Armv6HardFloat:
-                    embeddedResourceLocation = "NetworkTables.NativeLibraries.armv6.libntcore.so";
-                    //extractLocation = "libntcore.so";
-                    break;
-                // Android is only Arm Android. Don't currently have a way to detect otherwise.
-                case OsType.Android:
-                    embeddedResourceLocation = "NetworkTables.NativeLibraries.android.libntcore.so";
-                    //extractLocation = "libntcore.so";
-                    break;
-                case OsType.Armv7HardFloat:
-                    embeddedResourceLocation = "NetworkTables.NativeLibraries.armv7.libntcore.so";
-                    //extractLocation = "libntcore.so";
+                    embeddedResourceLocation = "NetworkTables.Core.NativeLibraries.roborio.libntcore.so";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
