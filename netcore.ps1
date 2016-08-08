@@ -2,7 +2,7 @@
 # http://andrewlock.net/publishing-your-first-nuget-package-with-appveyor-and-myget/
 
 param (
-  [switch]$buildRelease = $false,
+  [switch]$release = $false,
   [switch]$build = $false,
   [switch]$test = $false,
   [switch]$skipNtCore = $false,
@@ -61,11 +61,8 @@ function Exec
     }
 }
 
-If ($buildRelease) {
-  $build = $true
-}
 
-If ($buildRelease) {
+If ($release) {
  $revision =  ""
 } Else {
  $revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
@@ -197,7 +194,8 @@ function UpdateXml {
    Copy-Item Sandcastle\Help\NetworkTables.Core.xml src\NetworkTables.Core\$libLoc\netstandard1.5\NetworkTables.Core.xml
 }
 
-if ($APPVEYOR) {
+if ($env:APPVEYOR) {
+
  #Supress compiler xml warnings
   $netTablesJson = Get-Content 'src\NetworkTables\project.json' -raw | ConvertFrom-Json
   $netTablesJson.buildOptions | Add-Member -Name "nowarn" -value @("CS1591") -MemberType NoteProperty
@@ -208,7 +206,7 @@ if ($APPVEYOR) {
   $netTablesJson | ConvertTo-Json -Depth 5 | Set-Content 'src\NetworkTables.Core\project.json'
 }
 
-if ($buildRelease) {
+if ($release) {
  if ((Test-Path .\buildTemp) -eq $false) {
   md .\buildTemp
  }
@@ -243,7 +241,7 @@ if ($pack) {
  Pack
 }
 
-if ($buildRelease) {
+if ($release) {
  # Add beta definition back into project.json
  Copy-Item buildTemp\NetworkTables.projectjson src\NetworkTables\project.json
  Copy-Item buildTemp\NetworkTables.Core.projectjson src\NetworkTables.Core\project.json
