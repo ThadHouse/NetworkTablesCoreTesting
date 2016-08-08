@@ -95,6 +95,7 @@ function UploadAppVeyorTestResults {
 
 function Build {
   exec { & dotnet restore }
+  echo $configuration
   
   exec { & dotnet build src\NetworkTables $configuration $revision }
   
@@ -186,10 +187,6 @@ function UpdateXml {
    
    Copy-Item Sandcastle\Help\NetworkTables.Core.xml src\NetworkTables.Core\$libLoc\net451\NetworkTables.Core.xml
    Copy-Item Sandcastle\Help\NetworkTables.Core.xml src\NetworkTables.Core\$libLoc\netstandard1.5\NetworkTables.Core.xml
-}
-
-function Zip {
-#TODO
 }
 
 if ($build) {
