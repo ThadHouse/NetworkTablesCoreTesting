@@ -1,5 +1,5 @@
 {
-  "version": "2017.0.1",
+  "version": "2017.0.1-beta-*",
   "title": "FRC NetworkTables",
   "description": "A Managed version of the NetworkTables3 Protocol.",
   "copyright": "Copyright 2016 RobotDotNet",
@@ -49,10 +49,11 @@
         "../Shared/Wire/WireDecoder.cs",
         "../Shared/Wire/WireEncoder.cs"
       ]
-    }
+    },
+    "xmlDoc": true
   },
   "frameworks": {
-    "net45": {},
+    "net451": {},
     "netstandard1.3": {
       "dependencies": {
         "NETStandard.Library": "1.6.0",
@@ -62,9 +63,6 @@
     }
   },
   "configurations": {
-    "Release": {
-      "xmlDoc": true
-    },
     "Debug": {
       "define": [ "DEBUG" ]
     }

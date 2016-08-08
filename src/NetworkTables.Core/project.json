@@ -1,5 +1,5 @@
 {
-  "version": "2017.0.1",
+  "version": "2017.0.1-beta-*",
   "title": "FRC NetworkTables.Core",
   "description": "A Managed version of the NetworkTables3 Protocol.",
   "copyright": "Copyright 2016 RobotDotNet",
@@ -59,10 +59,11 @@
         "../Shared/Wire/WireEncoder.cs"
       ]
     },
-    "define": [ "CORE" ]
+    "define": [ "CORE" ],
+    "xmlDoc": true
   },
   "frameworks": {
-    "net45": {},
+    "net451": {},
     "netstandard1.5": {
       "dependencies": {
         "NETStandard.Library": "1.6.0"
@@ -70,9 +71,6 @@
     }
   },
   "configurations": {
-    "Release": {
-      "xmlDoc": true
-    },
     "Debug": {
       "define": [ "DEBUG" ]
     }
