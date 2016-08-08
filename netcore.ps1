@@ -117,12 +117,12 @@ function Test {
 
   if ($env:APPVEYOR) {
     # Run CodeCov tests using full framework
-    exec { & dotnet test test\NetworkTables.Test -f netcoreapp1.0 }
+    exec { & dotnet test test\NetworkTables.Test -f netcoreapp1.0 $configuration $revision }
     
       UploadAppVeyorTestResults
     
     
-    exec { & dotnet test test\NetworkTables.Core.Test -f netcoreapp1.0 }
+    exec { & dotnet test test\NetworkTables.Core.Test -f netcoreapp1.0 $configuration $revision}
     
       UploadAppVeyorTestResults
     
@@ -134,8 +134,8 @@ function Test {
     # install CodeCov
     .\NuGet.exe install OpenCover -Version $OpenCoverVersion -OutputDirectory buildTemp
     
-    Invoke-Expression $openCoverRun -register:user -target:nunit3-console.exe -targetargs:".test\NetworkTables.Test\$libLoc\netcoreapp1.0\NetworkTables.Test.dll --framework=net-4.5 " -filter:"+[Network*]* -[NetworkTables.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
-    Invoke-Expression $openCoverRun -register:user -target:nunit3-console.exe -targetargs:".test\NetworkTables.Core.Test\$libLoc\netcoreapp1.0\NetworkTables.Core.Test.dll --framework=net-4.5 " -filter:"+[Network*]* -[NetworkTables.Core.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
+    & $openCoverRun -register:user -target:nunit3-console.exe -targetargs:".test\NetworkTables.Test\$libLoc\netcoreapp1.0\NetworkTables.Test.dll --framework=net-4.5 " -filter:"+[Network*]* -[NetworkTables.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
+    & $openCoverRun -register:user -target:nunit3-console.exe -targetargs:".test\NetworkTables.Core.Test\$libLoc\netcoreapp1.0\NetworkTables.Core.Test.dll --framework=net-4.5 " -filter:"+[Network*]* -[NetworkTables.Core.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
     
     nunit3-console.exe test\NetworkTables.Core.Test\$libLoc\netcoreapp1.0\NetworkTables.Core.Test.dll --framework=net-4.5 --x86
     
