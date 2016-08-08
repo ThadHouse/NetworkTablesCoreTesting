@@ -128,7 +128,7 @@ function Test {
     
     $OpenCoverVersion = "4.6.519"
     
-    $openCoverRun = ".\buildTemp\OpenCover\$OpenCoverVersion\tools\OpenCover.Console.exe"
+    $openCoverRun = "buildTemp\OpenCover\$OpenCoverVersion\tools\OpenCover.Console.exe"
     
     
     # install CodeCov
@@ -141,9 +141,9 @@ function Test {
     
     $env:Path = "C:\Python34;C:\\Python34\Scripts" + $env:Path
     
-    pip install codecov
+    & pip install codecov
     
-    codecov -f "coverage.xml"
+    & codecov -f "coverage.xml"
     
     } else {
     echo "Starting Tests"
