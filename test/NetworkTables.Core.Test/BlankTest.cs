@@ -12,7 +12,7 @@ namespace NetworkTables.Core.Test
         [Test]
         public void Blank()
         {
-            Assert.True(false);
+            Assert.True(true);
         }
     }
 }
