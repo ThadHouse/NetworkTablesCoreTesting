@@ -126,8 +126,11 @@ function Test {
     
       UploadAppVeyorTestResults
       
+    exec { & dotnet build test\NetworkTables.Test -f net451 $configuration }
+      
     exec { & dotnet build test\NetworkTables.Test -f net451 -o buildTemp\NetworkTables.Test451\ $configuration }
     
+    exec { & dotnet build test\NetworkTables.Core.Test -f net451 $configuration }
     
     exec { & dotnet build test\NetworkTables.Core.Test -f net451 -o buildTemp\NetworkTables.Core.Test451\ $configuration }
     
