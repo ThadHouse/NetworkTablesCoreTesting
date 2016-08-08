@@ -11,8 +11,8 @@ namespace NetworkTables.Core.Native
     {
 
     }
-#if !NETSTANDARD1_6
-    //[SuppressUnmanagedCodeSecurity]
+#if !NETSTANDARD1_5
+    [SuppressUnmanagedCodeSecurity]
 #endif
     [ExcludeFromCodeCoverage]
     internal class Interop

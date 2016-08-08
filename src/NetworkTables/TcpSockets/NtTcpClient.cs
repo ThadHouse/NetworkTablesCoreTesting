@@ -76,17 +76,17 @@ namespace NetworkTables.TcpSockets
                 throw new ArgumentOutOfRangeException(nameof(ipAddresses), "IP Adresses must have values internally");
 
             IPEndPoint ipEp = new IPEndPoint(ipAddresses[0], port);
-            bool isProperlySupported = RuntimeDetector.GetRuntimeHasProperSockets();
+            var runtime = RuntimeDetector.GetPlatformType();
             try
             {
                 m_clientSocket.Blocking = false;
-                if (isProperlySupported)
+                if (runtime == PlatformType.Mono || runtime == PlatformType.NetCoreNoArraySockets)
                 {
-                    m_clientSocket.Connect(ipAddresses, port);
+                    m_clientSocket.Connect(ipEp);
                 }
                 else
                 {
-                    m_clientSocket.Connect(ipEp);
+                    m_clientSocket.Connect(ipAddresses, port);
                 }
                 //We have connected
                 m_active = true;
@@ -105,7 +105,7 @@ namespace NetworkTables.TcpSockets
                         {
                             if (m_clientSocket.Poll(1000, SelectMode.SelectWrite))
                             {
-                                if (!isProperlySupported)
+                                if (runtime == PlatformType.Mono)
                                     m_clientSocket.Connect(ipEp);
                                 // We have connected
                                 m_active = true;
@@ -124,13 +124,10 @@ namespace NetworkTables.TcpSockets
                     }
                     catch (SocketException ex2)
                     {
-                        if (!isProperlySupported)
+                        if (ex2.SocketErrorCode == SocketError.IsConnected)
                         {
-                            if (ex2.SocketErrorCode == SocketError.IsConnected)
-                            {
-                                m_active = true;
-                                return true;
-                            }
+                            m_active = true;
+                            return true;
                         }
                         Error($"Select() to {ipAddresses[0]} port {port} error {ex2.SocketErrorCode}");
                     }
