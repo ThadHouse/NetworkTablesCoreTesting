@@ -61,26 +61,26 @@ function Exec
     }
 }
 
-if ($buildRelease) {
+If ($buildRelease) {
  $revision =  ""
-} else {
+} Else {
  $revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
  $revision = "--version-suffix={0:D4}" -f [convert]::ToInt32($revision, 10)
 }
 
-if ($debug) {
+If ($debug) {
  $configuration = "-c=Debug"
-} else if ($env:APPVEYOR) {
+} ElseIf ($env:APPVEYOR) {
  $configuration = "-c=CI"
-} else {
+} Else {
 $configuration = "-c=Release"
 }
 
-if ($debug) {
+If ($debug) {
      $libLoc = "bin\Debug"
-    } else if ($env:APPVEYOR) {
+    } ElseIf ($env:APPVEYOR) {
      $libLoc = "bin\CI"
-    } else {
+    } Else {
     $libLoc = "bin\Release"
     }
     
