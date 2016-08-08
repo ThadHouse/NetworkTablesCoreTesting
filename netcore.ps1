@@ -117,12 +117,12 @@ function Test {
 
   if ($env:APPVEYOR) {
     # Run CodeCov tests using full framework
-    exec { & dotnet test test\NetworkTables.Test -f netcoreapp1.0 $configuration $revision }
+    exec { & dotnet test test\NetworkTables.Test -f netcoreapp1.0 $configuration }
     
       UploadAppVeyorTestResults
     
     
-    exec { & dotnet test test\NetworkTables.Core.Test -f netcoreapp1.0 $configuration $revision}
+    exec { & dotnet test test\NetworkTables.Core.Test -f netcoreapp1.0 $configuration }
     
       UploadAppVeyorTestResults
     
