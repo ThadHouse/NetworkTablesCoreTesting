@@ -5,9 +5,9 @@ skip_branch_with_pr: true
 nuget:
   disable_publish_on_pr: true
 build_script:
-- ps: ./netcore.ps1 -build
+- ps: .\netcore.ps1 -build
 test_script:
-- ps: -\netcore.ps1 -test
+- ps: .\netcore.ps1 -test
 on_success:
 - ps: >-
     If (($env:APPVEYOR_REPO_BRANCH -eq "master") -and (!$env:APPVEYOR_PULL_REQUEST_NUMBER)) {
