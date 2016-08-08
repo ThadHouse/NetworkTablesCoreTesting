@@ -1,15 +1,16 @@
-version: '{build}'
+version: '2017.{build}'
 pull_requests:
   do_not_increment_build_number: true
 skip_branch_with_pr: true
 nuget:
   disable_publish_on_pr: true
 build_script:
-- ps: ./netcore.ps1 -build #$isRelease
+- ps: ./netcore.ps1 -build
 test_script:
-- ps: ./netcore.ps1 -test #$isRelease
-on_success:
 - ps: >-
+
+    ./netcore.ps1 -test
+    
     If (($env:APPVEYOR_REPO_BRANCH -eq "master") -and (!$env:APPVEYOR_PULL_REQUEST_NUMBER)) {
 
     .\netcore.ps1 -updatexml -pack 
