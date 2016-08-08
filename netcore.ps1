@@ -70,14 +70,18 @@ if ($buildRelease) {
 
 if ($debug) {
  $configuration = "-c=Debug"
+} else if ($env:APPVEYOR) {
+ $configuration = "-c=CI"
 } else {
- $configuration = "-c=Release"
+$configuration = "-c=Release"
 }
 
 if ($debug) {
      $libLoc = "bin\Debug"
+    } else if ($env:APPVEYOR) {
+     $libLoc = "bin\CI"
     } else {
-     $libLoc = "bin\Release"
+    $libLoc = "bin\Release"
     }
     
     

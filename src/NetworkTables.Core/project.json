@@ -60,8 +60,7 @@
       ]
     },
     "define": [ "CORE" ],
-    "xmlDoc": true,
-    "nowarn": [ "CS1591" ]
+    "xmlDoc": true
   },
   "frameworks": {
     "net451": {},
@@ -72,6 +71,9 @@
     }
   },
   "configurations": {
+    "CI": {
+      "nowarn": [ "CS1591" ]
+    },
     "Debug": {
       "define": [ "DEBUG" ]
     }

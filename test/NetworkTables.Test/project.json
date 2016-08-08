@@ -26,5 +26,8 @@
   },
   "buildOptions": {
     "nowarn": [ "CS0618" ]
+  },
+  "configurations": {
+    "CI": {}
   }
 }
