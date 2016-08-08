@@ -62,6 +62,10 @@ function Exec
 }
 
 If ($buildRelease) {
+  $build = $true
+}
+
+If ($buildRelease) {
  $revision =  ""
 } Else {
  $revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
@@ -160,7 +164,9 @@ function Pack {
 
 function UpdateXml {    
     # Copy built files
-    
+    if ((Test-Path .\buildTemp) -eq $false) {
+  md .\buildTemp
+ }
  
   .\NuGet.exe install EWSoftware.SHFB -Version 2016.4.9 -o buildTemp
 
@@ -192,8 +198,21 @@ function UpdateXml {
 }
 
 if ($buildRelease) {
+ if ((Test-Path .\buildTemp) -eq $false) {
+  md .\buildTemp
+ }
+
  # Remove beta defintion from project.json files
- 
+  Copy-Item src\NetworkTables\project.json buildTemp\NetworkTables.projectjson
+  Copy-Item src\NetworkTables.Core\project.json buildTemp\NetworkTables.Core.projectjson
+  
+  $netTablesJson = Get-Content 'src\NetworkTables\project.json' -raw | ConvertFrom-Json
+  $netTablesJson.version = $netTablesJson.version.Substring(0, $netTablesJson.version.IndexOf("-"))
+  $netTablesJson | ConvertTo-Json -Depth 5 | Set-Content 'src\NetworkTables\project.json'
+  
+  $netTablesJson = Get-Content 'src\NetworkTables.Core\project.json' -raw | ConvertFrom-Json
+  $netTablesJson.version = $netTablesJson.version.Substring(0, $netTablesJson.version.IndexOf("-"))
+  $netTablesJson | ConvertTo-Json -Depth 5 | Set-Content 'src\NetworkTables.Core\project.json'
  
 }
 
@@ -211,4 +230,13 @@ if ($updatexml) {
 
 if ($pack) {
  Pack
+}
+
+if ($buildRelease) {
+ # Add beta definition back into project.json
+ Copy-Item buildTemp\NetworkTables.projectjson src\NetworkTables\project.json
+ Copy-Item buildTemp\NetworkTables.Core.projectjson src\NetworkTables.Core\project.json
+ 
+ Remove-Item buildTemp\NetworkTables.projectjson
+ Remove-Item buildTemp\NetworkTables.Core.projectjson
 }
