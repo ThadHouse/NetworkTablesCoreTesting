@@ -5,38 +5,13 @@ skip_branch_with_pr: true
 nuget:
   disable_publish_on_pr: true
 build_script:
-- ps: >-
-    $isRelease = ""
-
-    if (($env:APPVEYOR_REPO_TAG_NAME).Contains("-") -eq $false) {
-     $isRelease = "-release"
-    }
-
-    echo $isRelease
-    ./netcore.ps1 -build #$isRelease
-
+- ps: ./netcore.ps1 -build #$isRelease
 test_script:
-- ps: >-
-    $isRelease = ""
-
-    if (($env:APPVEYOR_REPO_TAG_NAME).Contains("-") -eq $false) {
-     $isRelease = "-release"
-    }
-
-    echo $isRelease
-    ./netcore.ps1 -test #$isRelease
-
+- ps: ./netcore.ps1 -test #$isRelease
 on_success:
 - ps: >-
     If (($env:APPVEYOR_REPO_BRANCH -eq "master") -and (!$env:APPVEYOR_PULL_REQUEST_NUMBER)) {
 
-    $isRelease = ""
-
-    if (($env:APPVEYOR_REPO_TAG_NAME).Contains("-") -eq $false) {
-     $isRelease = "-release"
-    }
-
-    echo $isRelease
     .\netcore.psi -updatexml -pack #$isRelease
 
 

@@ -61,6 +61,15 @@ function Exec
     }
 }
 
+If (Test-Path Env:APPVEYOR_REPO_TAG_NAME) {
+  if (($env:APPVEYOR_REPO_TAG_NAME).Contains("-") -eq $false) {
+     $release = $true
+     echo "Tagged Release"
+    }
+    echo "Tag but not release"
+}
+echo "Not Release"
+
 
 If ($release) {
  $revision =  ""
