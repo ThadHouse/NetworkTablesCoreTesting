@@ -118,16 +118,18 @@ function Test {
     
     $OpenCoverVersion = "4.6.519"
     
+    $openCoverRun = ".\buildTemp\OpenCover\$OpenCoverVersion\tools\OpenCover.Console.exe"
+    
     
     # install CodeCov
     .\NuGet.exe install OpenCover -Version $OpenCoverVersion -OutputDirectory buildTemp
     
-    .\buildTemp\OpenCover\$OpenCoverVersion\tools\OpenCover.Console.exe -register:user -target:nunit3-console.exe -targetargs:".test\NetworkTables.Test\$libLoc\netcoreapp1.0\NetworkTables.Test.dll --framework=net-4.5 " -filter:"+[Network*]* -[NetworkTables.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
-    .\buildTemp\OpenCover\$OpenCoverVersion\tools\OpenCover.Console.exe -register:user -target:nunit3-console.exe -targetargs:".test\NetworkTables.Core.Test\$libLoc\netcoreapp1.0\NetworkTables.Core.Test.dll --framework=net-4.5 " -filter:"+[Network*]* -[NetworkTables.Core.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
+    Invoke-Expression $openCoverRun -register:user -target:nunit3-console.exe -targetargs:".test\NetworkTables.Test\$libLoc\netcoreapp1.0\NetworkTables.Test.dll --framework=net-4.5 " -filter:"+[Network*]* -[NetworkTables.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
+    Invoke-Expression $openCoverRun -register:user -target:nunit3-console.exe -targetargs:".test\NetworkTables.Core.Test\$libLoc\netcoreapp1.0\NetworkTables.Core.Test.dll --framework=net-4.5 " -filter:"+[Network*]* -[NetworkTables.Core.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
     
     nunit3-console.exe test\NetworkTables.Core.Test\$libLoc\netcoreapp1.0\NetworkTables.Core.Test.dll --framework=net-4.5 --x86
     
-    "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
+    $env:Path = "C:\Python34;C:\\Python34\Scripts" + $env:Path
     
     pip install codecov
     
