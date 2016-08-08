@@ -100,25 +100,16 @@ function Build {
 function Test {
   exec { & dotnet restore }
 
-  exec { & dotnet build test\NetworkTables.Test $configuration $revision }
-  
-  if ($skipNtCore -eq $false) {
-    exec { & dotnet build test\NetworkTables.Core.Test $configuration $revision }
-  }
-
   if ($env:APPVEYOR) {
     # Run CodeCov tests using full framework
     exec { & dotnet test test\NetworkTables.Test -f netcoreapp1.0 }
     
-    if ($env:APPVEYOR) {
       UploadAppVeyorTestResults
-    }
     
-    exec { & dotnet test test\NetworkTables.Core.Test netcoreapp1.0 }
     
-    if ($env:APPVEYOR) {
+    exec { & dotnet test test\NetworkTables.Core.Test -f netcoreapp1.0 }
+    
       UploadAppVeyorTestResults
-    }
     
     $OpenCoverVersion = "4.6.519"
     
