@@ -35,28 +35,11 @@
       "NativeLibraries/x86/ntcore.dll"
     ],
     "compile": {
-      "includeFiles": [
-        "../Shared/Value.cs",
-        "../Shared/RpcStructs.cs",
-        "../Shared/RemoteProcedureCall.cs",
-        "../Shared/NtType.cs",
-        "../Shared/NtIPAddress.cs",
-        "../Shared/NtCore.cs",
-        "../Shared/NetworkTable.cs",
-        "../Shared/Enumerations.cs",
-        "../Shared/EntryInfo.cs",
-        "../Shared/Delegates.cs",
-        "../Shared/ConnectionInfo.cs",
-        "../Shared/Exceptions/PersistentException.cs",
-        "../Shared/Exceptions/TableKeyDifferentTypeException.cs",
-        "../Shared/Exceptions/TableKeyNotDefinedException.cs",
-        "../Shared/Tables/ITable.cs",
-        "../Shared/Tables/ITableListener.cs",
-        "../Shared/Tables/IRemote.cs",
-        "../Shared/Tables/IRemoteConnectionListener.cs",
-        "../Shared/Wire/Leb128.cs",
-        "../Shared/Wire/WireDecoder.cs",
-        "../Shared/Wire/WireEncoder.cs"
+      "include": [
+        "../Shared/*.cs",
+        "../Shared/Tables/*.cs",
+        "../Shared/Wire/*.cs",
+        "../Shared/Exceptions/*.cs"
       ]
     },
     "define": [ "CORE" ],
