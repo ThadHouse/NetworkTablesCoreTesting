@@ -25,16 +25,38 @@ namespace NetworkTables.Core.Test.SpecScanners
             public List<DelegateDeclarationSyntax> Methods;
         }
 
+        // Code for this found here
+        // http://stackoverflow.com/questions/19001423/getting-path-of-a-to-the-parent-folder-of-the-solution-file-c-sharp
+        private static string FindRootSolutionDirectory()
+        {
+#if NETCOREAPP1_0
+            return null
+#else
+            var assembly = Assembly.GetExecutingAssembly();
+            var p = Path.DirectorySeparatorChar;
+            var path = assembly.CodeBase.Replace("file:///", "").Replace("/", p.ToString());
+            path = Path.GetDirectoryName(path);
+
+
+            var directory = new DirectoryInfo(
+            path ?? Directory.GetCurrentDirectory());
+            while (directory != null && !directory.GetFiles("*.sln").Any())
+            {
+                directory = directory.Parent;
+            }
+            return directory?.FullName;
+#endif
+        }
+
         // Gets a list of all of our delegates used by the HAL
         public static List<HALDelegateClass> GetDelegates()
         {
             List<HALDelegateClass> halBaseMethods = new List<HALDelegateClass>();
 
-            var assembly = Assembly.GetExecutingAssembly();
+            var pathToSolution = FindRootSolutionDirectory();
             var p = Path.DirectorySeparatorChar;
-            var path = assembly.CodeBase.Replace("file:///", "").Replace("/", p.ToString());
-            path = Path.GetDirectoryName(path);
-            var file = $"{path}{p}..{p}..{p}..{p}..{p}..{p}..{p}src{p}NetworkTables.Core{p}Native{p}Interop.cs";
+            Assert.That(pathToSolution, Is.Not.Null);
+            var file = $"{pathToSolution}{p}src{p}NetworkTables.Core{p}Native{p}Interop.cs";
             HALDelegateClass cs = new HALDelegateClass
             {
                 ClassName = "",
@@ -64,12 +86,10 @@ namespace NetworkTables.Core.Test.SpecScanners
         public static List<string> GetRequestedNativeSymbols()
         {
             List<string> nativeFunctions = new List<string>();
-            var assembly = Assembly.GetExecutingAssembly();
+            var pathToSolution = FindRootSolutionDirectory();
             var p = Path.DirectorySeparatorChar;
-            var path = assembly.CodeBase.Replace("file:///", "").Replace("/", p.ToString());
-            path = Path.GetDirectoryName(path);
-            
-            var dir = $"{path}{p}..{p}..{p}..{p}..{p}..{p}..{p}src{p}NetworkTables.Core{p}Native";
+            Assert.That(pathToSolution, Is.Not.Null);
+            var dir = $"{pathToSolution}{p}src{p}NetworkTables.Core{p}Native";
             foreach (var file in Directory.GetFiles(dir, "*.cs"))
             {
                 if (!file.ToLower().Contains("Interop")) continue;
@@ -111,19 +131,19 @@ namespace NetworkTables.Core.Test.SpecScanners
 
             var roboRIOSymbols = GetRequestedNativeSymbols();
 
-            var assembly = Assembly.GetExecutingAssembly();
+            var pathToSolution = FindRootSolutionDirectory();
             var ps = Path.DirectorySeparatorChar;
-            var path = assembly.CodeBase.Replace("file:///", "").Replace("/", ps.ToString());
-            path = Path.GetDirectoryName(path);
+            Assert.That(pathToSolution, Is.Not.Null);
+            var dirToNetworkTablesLib = $"{pathToSolution}{ps}src{ps}NetworkTables.Core";
 
             // Start the child process.
             Process p = new Process();
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.FileName = path + $"{ps}..{ps}..{ps}..{ps}..{ps}..{ps}..{ps}src{ps}NetworkTables.Core\\NativeLibraries\\roborio\\frcnm.exe";
+            p.StartInfo.FileName = $"{dirToNetworkTablesLib}\\NativeLibraries\\roborio\\frcnm.exe";
                 Console.WriteLine(p.StartInfo.FileName);
-            p.StartInfo.Arguments = path + $"{ps}..{ps}..{ps}..{ps}..{ps}..{ps}..{ps}src{ps}NetworkTables.Core\\NativeLibraries\\roborio\\libntcore.so";
+            p.StartInfo.Arguments = $"{dirToNetworkTablesLib}\\NativeLibraries\\roborio\\libntcore.so";
             p.Start();
             string output = p.StandardOutput.ReadToEnd();
             p.WaitForExit();
@@ -358,4 +378,4 @@ namespace NetworkTables.Core.Test.SpecScanners
         }
     }
 #endif
-}
+        }

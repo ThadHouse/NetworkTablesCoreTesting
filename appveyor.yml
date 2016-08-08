@@ -2,8 +2,6 @@ version: '2017.{build}'
 pull_requests:
   do_not_increment_build_number: true
 skip_branch_with_pr: true
-init:
-- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 nuget:
   disable_publish_on_pr: true
 build_script:
@@ -26,5 +24,3 @@ deploy:
   on:
     branch: master
     appveyor_repo_tag: true
-on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

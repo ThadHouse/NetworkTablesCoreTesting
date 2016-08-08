@@ -125,21 +125,26 @@ function Test {
     exec { & dotnet test test\NetworkTables.Core.Test -f netcoreapp1.0 $configuration }
     
       UploadAppVeyorTestResults
+      
+    exec { & dotnet build test\NetworkTables.Test -f net451 -o buildTemp\NetworkTables.Test451\ $configuration }
+    
+    
+    exec { & dotnet build test\NetworkTables.Core.Test -f net451 -o buildTemp\NetworkTables.Core.Test451\ $configuration }
     
     $OpenCoverVersion = "4.6.519"
     
-    $openCoverRun = ".\buildTemp\OpenCover\4.6.519\tools\OpenCover.Console.exe"
+    $openCoverRun = ".\buildTemp\OpenCover.$OpenCoverVersion\tools\OpenCover.Console.exe"
     
     
     # install CodeCov
     .\NuGet.exe install OpenCover -Version $OpenCoverVersion -OutputDirectory buildTemp
     
-    .\buildTemp\OpenCover\4.6.519\tools\OpenCover.Console.exe -register:user -target:nunit3-console.exe -targetargs:".test\NetworkTables.Test\$libLoc\net451\*\NetworkTables.Test.dll --framework=net-4.5 " -filter:"+[Network*]* -[NetworkTables.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
-    .\buildTemp\OpenCover\4.6.519\tools\OpenCover.Console.exe -register:user -target:nunit3-console.exe -targetargs:".test\NetworkTables.Core.Test\$libLoc\net451\*\NetworkTables.Core.Test.dll --framework=net-4.5 " -filter:"+[Network*]* -[NetworkTables.Core.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
+    & $openCoverRun -register:user -target:nunit3-console.exe -targetargs:"buildTemp\NetworkTables.Core.Test451\NetworkTables.Test.dll --framework=net-4.5 " -filter:"+[Network*]* -[NetworkTables.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
+    & $openCoverRun -register:user -target:nunit3-console.exe -targetargs:"buildTemp\NetworkTables.Core.Test451\NetworkTables.Core.Test.dll --framework=net-4.5 " -filter:"+[Network*]* -[NetworkTables.Core.T*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput -returntargetcode
     
-    nunit3-console.exe test\NetworkTables.Core.Test\$libLoc\net451\*\NetworkTables.Core.Test.dll --framework=net-4.5 --x86
+    nunit3-console.exe buildTemp\NetworkTables.Core.Test451\NetworkTables.Core.Test.dll --framework=net-4.5 --x86
     
-    $env:Path = "C:\Python34;C:\\Python34\Scripts" + $env:Path
+    $env:Path = "C:\Python34;C:\\Python34\Scripts;" + $env:Path
     
     & pip install codecov
     
