@@ -177,12 +177,12 @@ function UpdateXml {
     $sandConfig = "Release"
    }
    
-   Invoke-MsBuild Sandcastle\NetworkTables.NetCore.shfbproj -configuration $sandConfig
-   
+   & 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe' Sandcastle\NetworkTables.NetCore.shfbproj /property:Configuration=Release /v:m
+
    Copy-Item Sandcastle\Help\NetworkTables.xml src\NetworkTables\$libLoc\net451\NetworkTables.xml
    Copy-Item Sandcastle\Help\NetworkTables.xml src\NetworkTables\$libLoc\netstandard1.3\NetworkTables.xml
    
-   Invoke-MsBuild Sandcastle\NetworkTables.Core.NetCore.shfbproj -configuration $sandConfig
+   & 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe' Sandcastle\NetworkTables.Core.NetCore.shfbproj /property:Configuration=Release /v:m
    
    Copy-Item Sandcastle\Help\NetworkTables.Core.xml src\NetworkTables.Core\$libLoc\net451\NetworkTables.Core.xml
    Copy-Item Sandcastle\Help\NetworkTables.Core.xml src\NetworkTables.Core\$libLoc\netstandard1.5\NetworkTables.Core.xml
