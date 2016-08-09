@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using static NetworkTables.Logging.Logger;
 
 namespace NetworkTables.TcpSockets
@@ -80,16 +81,16 @@ namespace NetworkTables.TcpSockets
                 {
                     return;
                 }
-
                 try
                 {
 #if !NETSTANDARD1_3
-                    connectSocket.Blocking = false;
-                    connectSocket.Connect(address, m_port);
-                    connectSocket.Dispose();
+                    var task = Task<Socket>.Factory.FromAsync(
+                        (callback, state) => ((Socket)state).BeginAccept(callback, state),
+                        asyncResult => ((Socket)asyncResult.AsyncState).EndAccept(asyncResult),
+                        state: connectSocket);
 #else
                     var task = connectSocket.ConnectAsync(address, m_port);
-                    task.Start();
+                    task.Wait(100);
                     connectSocket.Dispose();
 #endif
                 }
