@@ -7,9 +7,9 @@ debug=false
 skipNtCore=false
 
 if [ "$debug" = true ] ; then
-  configuration="-c=Release"
+  configuration="-c Release"
 else
-  configuration="-c=Debug"
+  configuration="-c Debug"
 fi  
 
 if [ "$debug" = true ] ; then
