@@ -33,6 +33,8 @@ function Test {
   #if [ "skipNtCore" = false ] ; then
     # dotnet test ./test/NetworkTables.Core.Test $configuration -f netcoreapp1.0
   #fi
+
+  ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
   
   dotnet build ./test/NetworkTables.Test $configuration -f net451
   
