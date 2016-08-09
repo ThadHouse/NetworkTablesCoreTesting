@@ -1,12 +1,16 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using static NetworkTables.Logging.Logger;
 
 namespace NetworkTables.TcpSockets
 {
     internal class TcpAcceptor : INetworkAcceptor
     {
-        private NtTcpListener m_server;
+        private static int num = 0;
+
+        private TcpListener m_server;
 
         private readonly int m_port;
         private readonly string m_address;
@@ -14,27 +18,29 @@ namespace NetworkTables.TcpSockets
         private bool m_shutdown;
         private bool m_listening;
 
+        private int localNum;
+
+        private CancellationTokenSource m_tokenSource;
+
         public TcpAcceptor(int port, string address)
         {
             m_port = port;
             m_address = address;
-        }
-
-        public void Dispose()
-        {
-            if (m_server != null)
-            {
-                Shutdown();
-            }
+            Console.WriteLine($"Creating Num {num}");
+            localNum = num;
+            num++;
         }
 
         public int Start()
         {
+            Console.WriteLine($"Starting Num {localNum}");
             if (m_listening) return 0;
+
+            m_tokenSource = new CancellationTokenSource();
 
             var address = !string.IsNullOrEmpty(m_address) ? IPAddress.Parse(m_address) : IPAddress.Any;
 
-            m_server = new NtTcpListener(address, m_port);
+            m_server = new TcpListener(address, m_port);
 
             try
             {
@@ -42,7 +48,8 @@ namespace NetworkTables.TcpSockets
             }
             catch (SocketException ex)
             {
-                Error($"TcpListener Start(): failed {ex.SocketErrorCode}");
+                Error($"{localNum} TcpListener Start(): failed {ex.SocketErrorCode}");
+                Console.WriteLine(ex.StackTrace);
                 return (int)ex.SocketErrorCode;
             }
 
@@ -52,7 +59,17 @@ namespace NetworkTables.TcpSockets
 
         public void Shutdown()
         {
+            Console.WriteLine($"Shutdown Num {localNum}");
             m_shutdown = true;
+
+            m_tokenSource?.Cancel();
+
+            m_server?.Stop();
+            m_server = null;
+            m_tokenSource = null;
+            m_listening = false;
+
+            /*
 
             //Force wakeup with non-blocking connect to ourselves
             var address = !string.IsNullOrEmpty(m_address) ? IPAddress.Parse(m_address) : IPAddress.Loopback;
@@ -81,12 +98,36 @@ namespace NetworkTables.TcpSockets
             m_listening = false;
             m_server?.Stop();
             m_server = null;
+            */
         }
 
-        public IClient Accept()
+        public TcpClient Accept()
         {
             if (!m_listening || m_shutdown) return null;
 
+            var tokenSource = m_tokenSource;
+
+            if (tokenSource == null || tokenSource.IsCancellationRequested)
+                return null;
+            try
+            {
+                var task = m_server.AcceptTcpClientAsync();
+                task.Wait(tokenSource.Token);
+                if (task.IsCompleted)
+                {
+                    return task.Result;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                return null;
+            }
+
+            /*
             SocketError error;
             Socket socket = m_server.Accept(out error);
             if (socket == null)
@@ -99,7 +140,8 @@ namespace NetworkTables.TcpSockets
                 socket.Dispose();
                 return null;
             }
-            return new NtTcpClient(socket);
+            return new TcpClient(0);
+            */
         }
     }
 }
