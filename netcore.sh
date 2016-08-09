@@ -30,9 +30,9 @@ function Test {
   
   # dotnet test ./test/NetworkTables.Test $configuration -f netcoreapp1.0
   
-  if [ "skipNtCore" = false ] ; then
+  #if [ "skipNtCore" = false ] ; then
     # dotnet test ./test/NetworkTables.Core.Test $configuration -f netcoreapp1.0
-  fi
+  #fi
   
   dotnet build ./test/NetworkTables.Test $configuration -f net451
   
