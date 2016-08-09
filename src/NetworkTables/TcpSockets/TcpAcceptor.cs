@@ -51,6 +51,10 @@ namespace NetworkTables.TcpSockets
             {
                 m_server.Start(5);
             }
+            catch (ObjectDisposedException)
+            {
+                return 1;
+            }
             catch (SocketException ex)
             {
                 Error($"TcpListener {m_num} Start(): failed {ex.SocketErrorCode}");
