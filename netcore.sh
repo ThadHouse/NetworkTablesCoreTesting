@@ -35,8 +35,8 @@ function Test {
   #fi
 
  
-  
-  dotnet build ./test/NetworkTables.Test $configuration -f net451
+  echo $configuration
+  dotnet build test/NetworkTables.Test $configuration -f net451
   
    ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
   
