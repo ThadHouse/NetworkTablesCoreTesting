@@ -16,21 +16,14 @@ namespace NetworkTables.TcpSockets
         private bool m_shutdown;
         private bool m_listening;
 
-        private static int s_totalNum = 0;
-        private static int m_num = 0;
-
         public TcpAcceptor(int port, string address)
         {
             m_port = port;
             m_address = address;
-            m_num = s_totalNum;
-            s_totalNum++;
-            Console.WriteLine($"TCP Acceptor Created {m_num}");
         }
 
         public void Dispose()
         {
-            Console.WriteLine($"TCP Acceptor Disposed {m_num}");
             if (m_server != null)
             {
                 Shutdown();
@@ -40,9 +33,6 @@ namespace NetworkTables.TcpSockets
         public int Start()
         {
             if (m_listening) return 0;
-
-            Console.WriteLine($"TCP Acceptor Started {m_num}");
-
             var address = !string.IsNullOrEmpty(m_address) ? IPAddress.Parse(m_address) : IPAddress.Any;
 
             m_server = new NtTcpListener(address, m_port);
@@ -57,7 +47,7 @@ namespace NetworkTables.TcpSockets
             }
             catch (SocketException ex)
             {
-                Error($"TcpListener {m_num} Start(): failed {ex.SocketErrorCode}");
+                Error($"TcpListener Start(): failed {ex.SocketErrorCode}");
                 return (int)ex.SocketErrorCode;
             }
 
@@ -69,44 +59,33 @@ namespace NetworkTables.TcpSockets
         {
             m_shutdown = true;
 
-            Console.WriteLine($"TCP Acceptor Shutdown {m_num}");
+            //Force wakeup with non-blocking connect to ourselves
+            var address = !string.IsNullOrEmpty(m_address) ? IPAddress.Parse(m_address) : IPAddress.Loopback;
 
-            if (m_listening)
+            Socket connectSocket;
+            try
             {
-                //Force wakeup with non-blocking connect to ourselves
-                var address = !string.IsNullOrEmpty(m_address) ? IPAddress.Parse(m_address) : IPAddress.Loopback;
-                Console.WriteLine(address.ToString());
-                Socket connectSocket;
-                try
-                {
-                    connectSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                }
-                catch (SocketException)
-                {
-                    throw;
-                }
-                try
-                {
-#if !NETSTANDARD1_3
-                    var task = Task.Factory.FromAsync(
-                        (targetAddress, targetPort, callback, state) => ((Socket)state).BeginConnect(targetAddress, targetPort, callback, state),
-                        asyncResult => ((Socket)asyncResult.AsyncState).EndConnect(asyncResult),
-                        address,
-                        m_port,
-                        state: connectSocket);
-#else
-                    var task = connectSocket.ConnectAsync(address, m_port);
-#endif
-                    task.Wait(1000);
-                    Console.WriteLine(task.IsCompleted);
-                    Console.WriteLine("Connected" + connectSocket.Connected);
-                    connectSocket.Dispose();
-                }
-                catch (SocketException)
-                {
-                    throw;
-                }
+                connectSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             }
+            catch (SocketException)
+            {
+                return;
+            }
+
+            connectSocket.Blocking = false;
+
+            try
+            {
+                connectSocket.Connect(address, m_port);
+                connectSocket.Dispose();
+            }
+            catch (SocketException)
+            {
+            }
+
+            m_listening = false;
+            m_server?.Stop();
+            m_server = null;
 
 
 
@@ -119,8 +98,6 @@ namespace NetworkTables.TcpSockets
         {
             if (!m_listening || m_shutdown) return null;
 
-            Console.WriteLine("Calling accept");
-
             SocketError error;
             Socket socket = m_server.Accept(out error);
             if (socket == null)
@@ -130,11 +107,9 @@ namespace NetworkTables.TcpSockets
             }
             if (m_shutdown)
             {
-                Console.WriteLine($"Socket awoken to shutdown {m_num}");
                 socket.Dispose();
                 return null;
             }
-            Console.WriteLine("Returned a good socket");
             return new NtTcpClient(socket);
         }
     }

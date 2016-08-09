@@ -25,7 +25,7 @@ namespace NetworkTables.TcpSockets
             m_serverSocket = new Socket(m_serverSocketEp.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         }
 
-        public void Start(int backlog = (int) SocketOptionName.MaxConnections)
+        public void Start(int backlog = (int)SocketOptionName.MaxConnections)
         {
             if (backlog < 0)
             {
@@ -41,16 +41,7 @@ namespace NetworkTables.TcpSockets
             {
                 return;
             }
-            Console.WriteLine("Is Bound: " + m_serverSocket.IsBound);
-            try
-            {
-                m_serverSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            m_serverSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
             m_serverSocket.Bind(m_serverSocketEp);
             try
             {
