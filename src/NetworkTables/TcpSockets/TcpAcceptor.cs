@@ -122,6 +122,11 @@ namespace NetworkTables.TcpSockets
                     return null;
                 }
             }
+            catch (AggregateException)
+            {
+                // TODO: Figure out how to handle this
+                return null;
+            }
             catch (OperationCanceledException)
             {
                 return null;

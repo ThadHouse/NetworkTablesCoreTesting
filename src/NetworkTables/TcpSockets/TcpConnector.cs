@@ -69,6 +69,10 @@ namespace NetworkTables.TcpSockets
                     return client;
                 }
             }
+            catch (AggregateException)
+            {
+                // TODO: Figure out how to handle this
+            }
             catch (OperationCanceledException)
             {
             }
