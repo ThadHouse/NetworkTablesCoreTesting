@@ -111,7 +111,6 @@ namespace NetworkTables.TcpSockets
             }
             return client;
             */
-            return null;
         }
     }
 }
