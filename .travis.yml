@@ -29,3 +29,4 @@ install:
   - export PATH="$DOTNET_INSTALL_DIR:$PATH"  
 script:  
   - ./netcore.sh
+
