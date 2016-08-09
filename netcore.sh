@@ -6,7 +6,7 @@ set -e
 debug=false
 skipNtCore=false
 
-if [ "$debug" = true ] ; then
+if [ "$debug" = false ] ; then
   configuration="-c Release"
 else
   configuration="-c Debug"
