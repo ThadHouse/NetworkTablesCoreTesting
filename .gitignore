@@ -218,3 +218,4 @@ testfile.txt
 networktables.ini
 networktables.ini.bak
 coverage.xml
+*.project.lock.json
