@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using static NetworkTables.Logging.Logger;
 
@@ -14,14 +15,21 @@ namespace NetworkTables.TcpSockets
         private bool m_shutdown;
         private bool m_listening;
 
+        private static int s_totalNum = 0;
+        private static int m_num = 0;
+
         public TcpAcceptor(int port, string address)
         {
             m_port = port;
             m_address = address;
+            m_num = s_totalNum;
+            s_totalNum++;
+            Console.WriteLine($"TCP Acceptor Created {m_num}");
         }
 
         public void Dispose()
         {
+            Console.WriteLine($"TCP Acceptor Disposed {m_num}");
             if (m_server != null)
             {
                 Shutdown();
@@ -31,6 +39,8 @@ namespace NetworkTables.TcpSockets
         public int Start()
         {
             if (m_listening) return 0;
+
+            Console.WriteLine($"TCP Acceptor Started {m_num}");
 
             var address = !string.IsNullOrEmpty(m_address) ? IPAddress.Parse(m_address) : IPAddress.Any;
 
@@ -42,7 +52,7 @@ namespace NetworkTables.TcpSockets
             }
             catch (SocketException ex)
             {
-                Error($"TcpListener Start(): failed {ex.SocketErrorCode}");
+                Error($"TcpListener {m_num} Start(): failed {ex.SocketErrorCode}");
                 return (int)ex.SocketErrorCode;
             }
 
@@ -53,6 +63,8 @@ namespace NetworkTables.TcpSockets
         public void Shutdown()
         {
             m_shutdown = true;
+
+            Console.WriteLine($"TCP Acceptor Shutdonw {m_num}");
 
             //Force wakeup with non-blocking connect to ourselves
             var address = !string.IsNullOrEmpty(m_address) ? IPAddress.Parse(m_address) : IPAddress.Loopback;

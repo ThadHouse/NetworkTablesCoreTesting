@@ -87,7 +87,7 @@ namespace NetworkTables.Test.ConnectionTesting
         [Test]
         public void ServerThenClientConnectionTest()
         {
-
+            Console.WriteLine("ServerThenClient");
             m_serverDispatcher.StartServer("", "", 9999);
             Thread.Sleep(500);
             m_clientDispatcher.StartClient("localhost", 9999);
@@ -110,6 +110,7 @@ namespace NetworkTables.Test.ConnectionTesting
         [Test]
         public void ClientThenServerConnectionTest()
         {
+            Console.WriteLine("ClientThenServer");
             m_clientDispatcher.StartClient("localhost", 9999);
             Thread.Sleep(500);
             m_serverDispatcher.StartServer("", "", 9999);
@@ -132,6 +133,7 @@ namespace NetworkTables.Test.ConnectionTesting
         [Test]
         public void ClientTestNoServer()
         {
+            Console.WriteLine("ClientNoServer");
             m_clientDispatcher.StartClient("localhost", 9999);
 
             Thread.Sleep(2000);
@@ -146,6 +148,7 @@ namespace NetworkTables.Test.ConnectionTesting
         [Test]
         public void ServerTestNoClient()
         {
+            Console.WriteLine("ServerNoClient");
             m_serverDispatcher.StartServer("", "", 9999);
 
             Thread.Sleep(2000);
@@ -160,6 +163,7 @@ namespace NetworkTables.Test.ConnectionTesting
         [Test]
         public void ServerTestClientDisconnect()
         {
+            Console.WriteLine("ServerClientDisconnect");
             m_serverDispatcher.StartServer("", "", 9999);
             Thread.Sleep(500);
             m_clientDispatcher.StartClient("localhost", 9999);
@@ -192,6 +196,7 @@ namespace NetworkTables.Test.ConnectionTesting
         [Test]
         public void ClientTestServerDisconnect()
         {
+            Console.WriteLine("ClientServerDisconnect");
             m_serverDispatcher.StartServer("", "", 9999);
             Thread.Sleep(500);
             m_clientDispatcher.StartClient("localhost", 9999);
@@ -224,6 +229,7 @@ namespace NetworkTables.Test.ConnectionTesting
         [Test]
         public void ServerTestConnectionListener()
         {
+            Console.WriteLine("ServerConnectionListener");
             m_serverDispatcher.StartServer("", "", 9999);
             Thread.Sleep(500);
             Notifier notifier = m_serverNotifier;
@@ -260,6 +266,7 @@ namespace NetworkTables.Test.ConnectionTesting
         [Test]
         public void ClientTestConnectionListener()
         {
+            Console.WriteLine("ClientConnectionListener");
             m_clientDispatcher.StartClient("localhost", 9999);
             
             Thread.Sleep(500);
