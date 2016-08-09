@@ -95,7 +95,7 @@ namespace NetworkTables.TcpSockets
 #endif
                     task.Wait(1000);
                     Console.WriteLine(task.IsCompleted);
-                    Console.WriteLine(connectSocket.Connected);
+                    Console.WriteLine("Connected" + connectSocket.Connected);
                     connectSocket.Dispose();
                 }
                 catch (SocketException)
@@ -115,6 +115,8 @@ namespace NetworkTables.TcpSockets
         {
             if (!m_listening || m_shutdown) return null;
 
+            Console.WriteLine("Calling accept");
+
             SocketError error;
             Socket socket = m_server.Accept(out error);
             if (socket == null)
@@ -128,6 +130,7 @@ namespace NetworkTables.TcpSockets
                 socket.Dispose();
                 return null;
             }
+            Console.WriteLine("Returned a good socket");
             return new NtTcpClient(socket);
         }
     }
