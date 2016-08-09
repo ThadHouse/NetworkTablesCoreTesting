@@ -41,7 +41,16 @@ namespace NetworkTables.TcpSockets
             {
                 return;
             }
-            m_serverSocket.ExclusiveAddressUse = false;
+            Console.WriteLine("Is Bound: " + m_serverSocket.IsBound);
+            try
+            {
+                m_serverSocket.ExclusiveAddressUse = false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
             m_serverSocket.Bind(m_serverSocketEp);
             try
             {
