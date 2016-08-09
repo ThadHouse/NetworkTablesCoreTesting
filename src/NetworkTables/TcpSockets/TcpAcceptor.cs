@@ -41,10 +41,13 @@ namespace NetworkTables.TcpSockets
             catch (SocketException ex)
             {
                 Error($"TcpListener Start(): failed {ex.SocketErrorCode}");
-                Console.WriteLine(ex.StackTrace);
-                return (int)ex.SocketErrorCode;
+                return (int) ex.SocketErrorCode;
             }
-
+            catch (ObjectDisposedException)
+            {
+                // Happens on a race condition
+                return 1;
+            }
             m_listening = true;
             return 0;
         }
