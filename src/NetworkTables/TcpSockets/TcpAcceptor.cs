@@ -79,7 +79,7 @@ namespace NetworkTables.TcpSockets
                 }
                 catch (SocketException)
                 {
-                    return;
+                    throw;
                 }
                 try
                 {
@@ -92,12 +92,13 @@ namespace NetworkTables.TcpSockets
                         state: connectSocket);
 #else
                     var task = connectSocket.ConnectAsync(address, m_port);
-                    task.Wait(100);
+                    task.Wait(1000);
                     connectSocket.Dispose();
 #endif
                 }
                 catch (SocketException)
                 {
+                    throw;
                 }
             }
 
@@ -121,6 +122,7 @@ namespace NetworkTables.TcpSockets
             }
             if (m_shutdown)
             {
+                Console.WriteLine($"Socket awoken to shutdown {m_num}");
                 socket.Dispose();
                 return null;
             }
