@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+#if NETSTANDARD1_3
+using System.Runtime.InteropServices;
+#endif
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,7 +33,7 @@ namespace NetworkTables.TcpSockets
                 if (type == null)
                 {
 #if NETSTANDARD1_3
-                    if (Path.DirectorySeparatorChar == '\\')
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
                         // Windows
                         s_socketState = ProperSocketsCacheState.Supported;

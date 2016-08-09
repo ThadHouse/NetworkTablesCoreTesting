@@ -7,6 +7,7 @@ namespace NetworkTables.Core.Native
 {
     enum OsType
     {
+        None,
         Windows32,
         Windows64,
         Linux32,
@@ -28,26 +29,47 @@ namespace NetworkTables.Core.Native
         }
 
         internal static bool IsWindows()
-         {
-             return Path.DirectorySeparatorChar == '\\';
-         }
+        {
+#if NETSTANDARD1_5
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+#else
+            return Path.DirectorySeparatorChar == '\\';
+#endif
+        }
 
-internal static OsType GetOsType()
+        internal static OsType GetOsType()
         {
             if (!IsWindows())
             {
                 //These 3 mean we are running on a unix based system
                 //Check for RIO first
                 if (File.Exists("/usr/local/frc/bin/frcRunRobot.sh")) return OsType.RoboRio;
-
+#if NETSTANDARD1_5
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    if (Is64BitOs()) return OsType.Linux64;
+                    else return OsType.Linux32;
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    if (Is64BitOs()) return OsType.MacOs64;
+                    else return OsType.MacOs32;
+                }
+                else
+                {
+                    return OsType.None;
+                }
+            }
+#else
                 Utsname uname;
                 try
                 {
                     //Try to grab uname. On android this fails, so we can assume android
                     Uname.uname(out uname);
                 }
-                catch
+                catch (Exception e)
                 {
+                    Console.WriteLine(e);
                     return OsType.Android;
                 }
 
@@ -77,11 +99,13 @@ internal static OsType GetOsType()
 
 
             }
+#endif
             else
             {
                 //Assume we are on windows otherwise
                 return Is64BitOs() ? OsType.Windows64 : OsType.Windows32;
             }
+
         }
 
         internal static bool CheckOsValid(OsType type)
@@ -105,7 +129,7 @@ internal static OsType GetOsType()
                 case OsType.Armv7HardFloat:
                     return false;
                 case OsType.Android:
-                    return false; 
+                    return false;
                 case OsType.RoboRio:
                     return true;
                 default:
