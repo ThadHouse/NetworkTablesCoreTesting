@@ -34,9 +34,11 @@ function Test {
     # dotnet test ./test/NetworkTables.Core.Test $configuration -f netcoreapp1.0
   #fi
 
-  ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+ 
   
   dotnet build ./test/NetworkTables.Test $configuration -f net451
+  
+   ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
   
   mono test/NetworkTables.Test/$libLoc/net451/*/dotnet-test-nunit.exe test/NetworkTables.Test/$libLoc/net451/*/NetworkTables.Test.dll 
   
