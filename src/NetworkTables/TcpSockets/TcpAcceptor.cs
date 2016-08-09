@@ -71,7 +71,7 @@ namespace NetworkTables.TcpSockets
             {
                 //Force wakeup with non-blocking connect to ourselves
                 var address = !string.IsNullOrEmpty(m_address) ? IPAddress.Parse(m_address) : IPAddress.Loopback;
-
+                Console.WriteLine(address.ToString());
                 Socket connectSocket;
                 try
                 {
@@ -92,9 +92,11 @@ namespace NetworkTables.TcpSockets
                         state: connectSocket);
 #else
                     var task = connectSocket.ConnectAsync(address, m_port);
-                    task.Wait(1000);
-                    connectSocket.Dispose();
 #endif
+                    task.Wait(1000);
+                    Console.WriteLine(task.IsCompleted);
+                    Console.WriteLine(connectSocket.Connected);
+                    connectSocket.Dispose();
                 }
                 catch (SocketException)
                 {
