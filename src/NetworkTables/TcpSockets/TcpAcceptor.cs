@@ -84,9 +84,11 @@ namespace NetworkTables.TcpSockets
                 try
                 {
 #if !NETSTANDARD1_3
-                    var task = Task<Socket>.Factory.FromAsync(
-                        (callback, state) => ((Socket)state).BeginAccept(callback, state),
-                        asyncResult => ((Socket)asyncResult.AsyncState).EndAccept(asyncResult),
+                    var task = Task.Factory.FromAsync(
+                        (targetAddress, targetPort, callback, state) => ((Socket)state).BeginConnect(targetAddress, targetPort, callback, state),
+                        asyncResult => ((Socket)asyncResult.AsyncState).EndConnect(asyncResult),
+                        address,
+                        m_port,
                         state: connectSocket);
 #else
                     var task = connectSocket.ConnectAsync(address, m_port);
