@@ -105,7 +105,7 @@ namespace NetworkTables.TcpSockets
                         {
                             if (m_clientSocket.Poll(1000, SelectMode.SelectWrite))
                             {
-                                if (runtime == PlatformType.Mono)
+                                if (runtime == PlatformType.Mono || runtime == PlatformType.NetCoreNoArraySockets)
                                     m_clientSocket.Connect(ipEp);
                                 // We have connected
                                 m_active = true;
