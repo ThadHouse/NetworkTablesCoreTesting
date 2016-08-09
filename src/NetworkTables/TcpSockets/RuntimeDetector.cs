@@ -1,60 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace NetworkTables.TcpSockets
 {
-    internal enum PlatformType
-    {
-        None,
-        NetFramework,
-        Mono,
-        NetCoreSupportsArraySockets,
-        NetCoreNoArraySockets
-    }
     internal static class RuntimeDetector
     {
-        private static PlatformType s_platformType = PlatformType.None;
+        enum ProperSocketsCacheState
+        {
+            NotCached,
+            Supported,
+            NotSupported
+        }
+
+        private static ProperSocketsCacheState s_socketState = ProperSocketsCacheState.NotCached;
 
         /// <summary>
         /// Gets if the runtime has sockets that support proper connections
         /// </summary>
         /// <returns></returns>
-        public static PlatformType GetPlatformType()
+        public static bool GetRuntimeHasProperSockets()
         {
-            if (s_platformType == PlatformType.None)
+            if (s_socketState == ProperSocketsCacheState.NotCached)
             {
-#if NETSTANDARD1_3
-                // Ugly, but its what we have
-                if (Path.DirectorySeparatorChar == '\\')
-                {
-                    // Windows
-                    s_platformType = PlatformType.NetCoreSupportsArraySockets;
-                    return PlatformType.NetCoreSupportsArraySockets;
-                } 
-                else
-                {
-                    s_platformType = PlatformType.NetCoreNoArraySockets;
-                    return PlatformType.NetCoreNoArraySockets;
-                }
-#else
                 Type type = Type.GetType("Mono.Runtime");
                 if (type == null)
                 {
-                    // Mono Runtime. 
-                    s_platformType = PlatformType.Mono;
-                    return PlatformType.Mono;
+                    s_socketState = ProperSocketsCacheState.Supported;
+                    return true;
                 }
-
-                s_platformType = PlatformType.NetFramework;
-                return PlatformType.NetFramework;
-#endif
+                // For now mono does not support, so return false
+                s_socketState = ProperSocketsCacheState.NotSupported;
+                return false;
             }
-            return s_platformType;
+            return s_socketState == ProperSocketsCacheState.Supported;
         }
     }
 }

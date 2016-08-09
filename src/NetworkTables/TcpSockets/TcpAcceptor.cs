@@ -1,14 +1,12 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using static NetworkTables.Logging.Logger;
 
 namespace NetworkTables.TcpSockets
 {
     internal class TcpAcceptor : INetworkAcceptor
     {
-        private TcpListener m_server;
+        private NtTcpListener m_server;
 
         private readonly int m_port;
         private readonly string m_address;
@@ -16,23 +14,27 @@ namespace NetworkTables.TcpSockets
         private bool m_shutdown;
         private bool m_listening;
 
-        private CancellationTokenSource m_tokenSource;
-
         public TcpAcceptor(int port, string address)
         {
             m_port = port;
             m_address = address;
         }
 
+        public void Dispose()
+        {
+            if (m_server != null)
+            {
+                Shutdown();
+            }
+        }
+
         public int Start()
         {
             if (m_listening) return 0;
 
-            m_tokenSource = new CancellationTokenSource();
-
             var address = !string.IsNullOrEmpty(m_address) ? IPAddress.Parse(m_address) : IPAddress.Any;
 
-            m_server = new TcpListener(address, m_port);
+            m_server = new NtTcpListener(address, m_port);
 
             try
             {
@@ -41,13 +43,9 @@ namespace NetworkTables.TcpSockets
             catch (SocketException ex)
             {
                 Error($"TcpListener Start(): failed {ex.SocketErrorCode}");
-                return (int) ex.SocketErrorCode;
+                return (int)ex.SocketErrorCode;
             }
-            catch (ObjectDisposedException)
-            {
-                // Happens on a race condition
-                return 1;
-            }
+
             m_listening = true;
             return 0;
         }
@@ -56,48 +54,52 @@ namespace NetworkTables.TcpSockets
         {
             m_shutdown = true;
 
-            m_tokenSource?.Cancel();
+            //Force wakeup with non-blocking connect to ourselves
+            var address = !string.IsNullOrEmpty(m_address) ? IPAddress.Parse(m_address) : IPAddress.Loopback;
 
+            Socket connectSocket;
+            try
+            {
+                connectSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            }
+            catch (SocketException)
+            {
+                return;
+            }
+
+            connectSocket.Blocking = false;
+
+            try
+            {
+                connectSocket.Connect(address, m_port);
+                connectSocket.Dispose();
+            }
+            catch (SocketException)
+            {
+            }
+
+            m_listening = false;
             m_server?.Stop();
             m_server = null;
-            m_tokenSource = null;
-            m_listening = false;
         }
 
-        public TcpClient Accept()
+        public IClient Accept()
         {
             if (!m_listening || m_shutdown) return null;
 
-            var tokenSource = m_tokenSource;
-
-            if (tokenSource == null || tokenSource.IsCancellationRequested)
-                return null;
-            try
+            SocketError error;
+            Socket socket = m_server.Accept(out error);
+            if (socket == null)
             {
-                var task = m_server.AcceptTcpClientAsync();
-                task.Wait(tokenSource.Token);
-                if (task.IsCompleted)
-                {
-                    return task.Result;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (AggregateException)
-            {
-                // TODO: Figure out how to handle this
+                if (!m_shutdown) Error($"Accept() failed: {error}");
                 return null;
             }
-            catch (OperationCanceledException)
+            if (m_shutdown)
             {
+                socket.Dispose();
                 return null;
             }
-            catch (ObjectDisposedException)
-            {
-                return null;
-            }
+            return new NtTcpClient(socket);
         }
     }
 }

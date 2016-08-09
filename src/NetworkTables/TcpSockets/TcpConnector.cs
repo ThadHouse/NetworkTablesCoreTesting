@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using static NetworkTables.Logging.Logger;
 
 namespace NetworkTables.TcpSockets
@@ -41,7 +40,7 @@ namespace NetworkTables.TcpSockets
             return 0;
         }
 
-        public static TcpClient Connect(string server, int port, CancellationToken token, int timeout = -1)
+        public static NtTcpClient Connect(string server, int port, int timeout = 0)
         {
             IPAddress[] addr;
             if (ResolveHostName(server, out addr) != 0)
@@ -58,34 +57,8 @@ namespace NetworkTables.TcpSockets
                 }
             }
 
-            TcpClient client = new TcpClient(AddressFamily.InterNetwork);
-
-            try
-            {
-                var task = client.ConnectAsync(addr, port);
-                bool success = task.Wait(timeout, token);
-                if (success && task.IsCompleted)
-                {
-                    return client;
-                }
-            }
-            catch (AggregateException)
-            {
-                // TODO: Figure out how to handle this
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (ObjectDisposedException)
-            {
-            }
-            ((IDisposable)client).Dispose();
-            return null;
-
-
-            /*
             //Create out client
-            TcpClient client = new TcpClient(AddressFamily.InterNetwork);
+            NtTcpClient client = new NtTcpClient(AddressFamily.InterNetwork);
             // No time limit, connect forever
             if (timeout == 0)
             {
@@ -110,7 +83,6 @@ namespace NetworkTables.TcpSockets
                 return null;
             }
             return client;
-            */
         }
     }
 }

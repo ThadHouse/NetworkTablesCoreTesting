@@ -6,13 +6,10 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using static NetworkTables.Logging.Logger;
 
 namespace NetworkTables.TcpSockets
 {
-    /*
     internal class NtTcpClient : IDisposable, IClient
     {
         private Socket m_clientSocket;
@@ -65,22 +62,6 @@ namespace NetworkTables.TcpSockets
             return m_dataStream ?? (m_dataStream = new NetworkStream(m_clientSocket, true));
         }
 
-        public Task ConnectAsync(IPAddress[] ipAddresses, int port)
-        {
-            return Task.Factory.FromAsync(
-                (targetAddess, targetPort, callback, state) => ((Socket)state).BeginConnect(targetAddess, targetPort, callback, state),
-                asyncResult => ((Socket)asyncResult.AsyncState).EndConnect(asyncResult),
-                ipAddresses,
-                port,
-                state: this.m_clientSocket);
-
-            TcpClient client = new TcpClient();
-            client.c
-        }
-
-        
-        /*
-
         public void Connect(IPAddress[] ipAddresses, int port)
         {
             m_clientSocket.Connect(ipAddresses, port);
@@ -95,17 +76,17 @@ namespace NetworkTables.TcpSockets
                 throw new ArgumentOutOfRangeException(nameof(ipAddresses), "IP Adresses must have values internally");
 
             IPEndPoint ipEp = new IPEndPoint(ipAddresses[0], port);
-            var runtime = RuntimeDetector.GetPlatformType();
+            bool isProperlySupported = RuntimeDetector.GetRuntimeHasProperSockets();
             try
             {
                 m_clientSocket.Blocking = false;
-                if (runtime == PlatformType.Mono || runtime == PlatformType.NetCoreNoArraySockets)
+                if (isProperlySupported)
                 {
-                    m_clientSocket.Connect(ipEp);
+                    m_clientSocket.Connect(ipAddresses, port);
                 }
                 else
                 {
-                    m_clientSocket.Connect(ipAddresses, port);
+                    m_clientSocket.Connect(ipEp);
                 }
                 //We have connected
                 m_active = true;
@@ -124,7 +105,7 @@ namespace NetworkTables.TcpSockets
                         {
                             if (m_clientSocket.Poll(1000, SelectMode.SelectWrite))
                             {
-                                if (runtime == PlatformType.Mono || runtime == PlatformType.NetCoreNoArraySockets)
+                                if (!isProperlySupported)
                                     m_clientSocket.Connect(ipEp);
                                 // We have connected
                                 m_active = true;
@@ -143,10 +124,13 @@ namespace NetworkTables.TcpSockets
                     }
                     catch (SocketException ex2)
                     {
-                        if (ex2.SocketErrorCode == SocketError.IsConnected)
+                        if (!isProperlySupported)
                         {
-                            m_active = true;
-                            return true;
+                            if (ex2.SocketErrorCode == SocketError.IsConnected)
+                            {
+                                m_active = true;
+                                return true;
+                            }
                         }
                         Error($"Select() to {ipAddresses[0]} port {port} error {ex2.SocketErrorCode}");
                     }
@@ -168,7 +152,6 @@ namespace NetworkTables.TcpSockets
             }
             return false;
         }
-        
 
         protected virtual void Dispose(bool disposing)
         {
@@ -220,6 +203,5 @@ namespace NetworkTables.TcpSockets
 
         public bool Connected => m_clientSocket.Connected;
     }
-    */
 
 }
