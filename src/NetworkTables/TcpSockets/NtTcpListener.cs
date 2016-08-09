@@ -44,7 +44,7 @@ namespace NetworkTables.TcpSockets
             Console.WriteLine("Is Bound: " + m_serverSocket.IsBound);
             try
             {
-                m_serverSocket.ExclusiveAddressUse = false;
+                m_serverSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
             }
             catch (Exception e)
             {
