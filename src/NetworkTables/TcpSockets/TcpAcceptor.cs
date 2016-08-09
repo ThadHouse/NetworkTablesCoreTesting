@@ -64,8 +64,9 @@ namespace NetworkTables.TcpSockets
         {
             m_shutdown = true;
 
-            Console.WriteLine($"TCP Acceptor Shutdonw {m_num}");
+            Console.WriteLine($"TCP Acceptor Shutdown {m_num}");
 
+            /*
             //Force wakeup with non-blocking connect to ourselves
             var address = !string.IsNullOrEmpty(m_address) ? IPAddress.Parse(m_address) : IPAddress.Loopback;
 
@@ -89,6 +90,8 @@ namespace NetworkTables.TcpSockets
             catch (SocketException)
             {
             }
+            */
+            
 
             m_listening = false;
             m_server?.Stop();
