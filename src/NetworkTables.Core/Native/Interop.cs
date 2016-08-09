@@ -11,7 +11,7 @@ namespace NetworkTables.Core.Native
     {
 
     }
-#if !NETSTANDARD1_5
+#if !NETSTANDARD
     [SuppressUnmanagedCodeSecurity]
 #endif
     [ExcludeFromCodeCoverage]
@@ -68,7 +68,11 @@ namespace NetworkTables.Core.Native
                 try
                 {
                     finalizeInterop.Ping();
+#if NETSTANDARD1_4
+                    string[] commandArgs = new string[0];
+#else
                     string[] commandArgs = Environment.GetCommandLineArgs();
+#endif
                     foreach (var commandArg in commandArgs)
                     {
                         //search for a line with the prefix "-ntcore:"
@@ -138,7 +142,11 @@ namespace NetworkTables.Core.Native
                 {
                     Console.WriteLine(e.Message);
                     Console.WriteLine(e.StackTrace);
+#if NETSTANDARD1_4
+                    throw;
+#else
                     Environment.Exit(1);
+#endif
                 }
                 s_runFinalizer = true;
                 s_libraryLoaded = true;

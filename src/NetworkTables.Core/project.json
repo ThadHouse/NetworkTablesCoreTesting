@@ -40,7 +40,7 @@
         "Exceptions/",
         "Tables/",
         "Wire/"
-      ], 
+      ],
       "include": [
         "../Shared/*.cs",
         "../Shared/Tables/*.cs",
@@ -54,6 +54,17 @@
   "frameworks": {
     "net451": {},
     "netstandard1.5": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      },
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "netstandard1.4": {
+      "buildOptions": {
+        "define": [ "NETSTANDARD" ]
+      },
       "dependencies": {
         "NETStandard.Library": "1.6.0"
       }
