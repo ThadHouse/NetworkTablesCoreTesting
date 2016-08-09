@@ -36,9 +36,7 @@ function Test {
   
   dotnet build ./test/NetworkTables.Test $configuration -f net451
   
-  mono \
-    ./test/NetworkTables.Test/$libLoc/net451/*/dotnet-test-nunit.exe \
-    ./test/NetworkTables.Test/$libLoc/net451/*/NetworkTables.Test.dll 
+  mono test/NetworkTables.Test/$libLoc/net451/*/dotnet-test-nunit.exe test/NetworkTables.Test/$libLoc/net451/*/NetworkTables.Test.dll 
   
   #if [ "skipNtCore" = false ] ; then
    # dotnet build ./test/NetworkTables.Core.Test $configuration -f net451
