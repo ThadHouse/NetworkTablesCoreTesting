@@ -5,7 +5,6 @@ using NetworkTables.TcpSockets;
 using static NetworkTables.Logging.Logger;
 using NetworkTables.Extensions;
 using System.Net;
-using System.Net.Sockets;
 
 namespace NetworkTables
 {
@@ -105,7 +104,6 @@ namespace NetworkTables
                 m_active = true;
             }
             m_server = true;
-            m_stop = false;
             m_persistFilename = persistentFilename;
             m_serverAccepter = acceptor;
 
@@ -159,7 +157,6 @@ namespace NetworkTables
                 m_clientConnectors = connectors;
             }
             m_server = false;
-            m_stop = false;
 
             //Bind SetOutgoing
             m_storage.SetOutgoing(QueueOutgoing, m_server);
@@ -180,12 +177,10 @@ namespace NetworkTables
             m_clientServerThread.Start();
         }
 
-        private volatile bool m_stop = false;
 
         public void Stop()
         {
             m_active = false;
-            m_stop = true;
 
             // Wake up dispatch thread with a flush
             m_flushCv.Set();
@@ -344,28 +339,6 @@ namespace NetworkTables
 
         private void ServerThreadMain()
         {
-            // Continue retrying to start socket, with a 100ms wait each time.
-            while (true)
-            {
-                int result = m_serverAccepter.Start();
-                // Stop if we have been requested to stop
-                if (m_stop) return;
-                // Continue if we have properly connected
-                if (result == 0) break;
-                // If address is already in use, that is the only error we can
-                // recover from, so keep trying. Otherwise break;
-                if (result == (int) SocketError.AddressAlreadyInUse)
-                {
-                    Thread.Sleep(100);
-                    continue;
-                }
-                else
-                {
-                    // Return on any other error. Start() prints the error message
-                    return;
-                }
-            }
-
             if (m_serverAccepter.Start() != 0)
             {
                 m_active = false;
