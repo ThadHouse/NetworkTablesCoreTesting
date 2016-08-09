@@ -66,32 +66,39 @@ namespace NetworkTables.TcpSockets
 
             Console.WriteLine($"TCP Acceptor Shutdown {m_num}");
 
-            /*
-            //Force wakeup with non-blocking connect to ourselves
-            var address = !string.IsNullOrEmpty(m_address) ? IPAddress.Parse(m_address) : IPAddress.Loopback;
+            if (m_listening)
+            {
+                //Force wakeup with non-blocking connect to ourselves
+                var address = !string.IsNullOrEmpty(m_address) ? IPAddress.Parse(m_address) : IPAddress.Loopback;
 
-            Socket connectSocket;
-            try
-            {
-                connectSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            }
-            catch (SocketException)
-            {
-                return;
+                Socket connectSocket;
+                try
+                {
+                    connectSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                }
+                catch (SocketException)
+                {
+                    return;
+                }
+
+                try
+                {
+#if !NETSTANDARD1_3
+                    connectSocket.Blocking = false;
+                    connectSocket.Connect(address, m_port);
+                    connectSocket.Dispose();
+#else
+                    var task = connectSocket.ConnectAsync(address, m_port);
+                    task.Start();
+                    connectSocket.Dispose();
+#endif
+                }
+                catch (SocketException)
+                {
+                }
             }
 
-            connectSocket.Blocking = false;
 
-            try
-            {
-                connectSocket.Connect(address, m_port);
-                connectSocket.Dispose();
-            }
-            catch (SocketException)
-            {
-            }
-            */
-            
 
             m_listening = false;
             m_server?.Stop();
