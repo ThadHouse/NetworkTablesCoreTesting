@@ -126,6 +126,10 @@ namespace NetworkTables.TcpSockets
             {
                 return null;
             }
+            catch (ObjectDisposedException)
+            {
+                return null;
+            }
 
             /*
             SocketError error;

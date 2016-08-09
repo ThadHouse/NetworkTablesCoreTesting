@@ -94,8 +94,7 @@ If ($debug) {
     $libLoc = "bin\Release"
     }
     
-    
-$updatedxml = $false
+    echo $libLoc
 
 function UploadAppVeyorTestResults {
  # upload results to AppVeyor
@@ -156,10 +155,10 @@ function Test {
     } else {
     echo "Starting Tests"
      # run all tests using dotnet test runner
-    exec { & dotnet test test\NetworkTables.Test }
+    exec { & dotnet test test\NetworkTables.Test $configuration }
     
     if ($skipNtCore -eq $false) {
-    exec { & dotnet test test\NetworkTables.Core.Test }
+    exec { & dotnet test test\NetworkTables.Core.Test $configuration }
     }
   }
 }

@@ -71,7 +71,9 @@ namespace NetworkTables.TcpSockets
             }
             catch (OperationCanceledException)
             {
-
+            }
+            catch (ObjectDisposedException)
+            {
             }
             ((IDisposable)client).Dispose();
             return null;
