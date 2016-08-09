@@ -40,13 +40,13 @@ function Test {
     ./test/NetworkTables.Test/$libLoc/net451/*/dotnet-test-nunit.exe \
     ./test/NetworkTables.Test/$libLoc/net451/*/NetworkTables.Test.dll 
   
-  if [ "skipNtCore" = false ] ; then
-    dotnet build ./test/NetworkTables.Core.Test $configuration -f net451
+  #if [ "skipNtCore" = false ] ; then
+   # dotnet build ./test/NetworkTables.Core.Test $configuration -f net451
   
-    mono \
+    #mono \
     ./test/NetworkTables.Core.Test/$libLoc/net451/*/dotnet-test-nunit.exe \
     ./test/NetworkTables.Core.Test/$libLoc/net451/*/NetworkTables.Core.Test.dll 
-  fi
+  #fi
 }
 
 Build
