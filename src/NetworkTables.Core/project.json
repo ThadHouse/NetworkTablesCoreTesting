@@ -1,7 +1,7 @@
 {
   "version": "2017.0.1-beta-*",
   "title": "FRC NetworkTables.Core",
-  "description": "A Managed version of the NetworkTables3 Protocol.",
+  "description": "NetworkTables using the ntcore library.",
   "copyright": "Copyright 2016 RobotDotNet",
   "authors": [
     "RobotDotNet"
@@ -15,6 +15,7 @@
     ],
     "id": "FRC.NetworkTables.Core",
     "tags": [ "WPILib", "FRC", "FIRST", "RoboRio" ],
+    "title": "FRC NetworkTables.Core",
     "requireLicenseAcceptance": false,
     "projectUrl": "https://github.com/robotdotnet/NetworkTables",
     "summary": "A Managed version of the NetworkTables3 Protocol.",
