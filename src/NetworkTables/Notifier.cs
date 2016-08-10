@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using NetworkTables.Extensions;
 
 namespace NetworkTables
@@ -11,7 +12,7 @@ namespace NetworkTables
         private bool m_destroyed;
         private bool m_localNotifiers;
 
-        private Thread m_thread;
+        private Task m_thread;
 
         // Special class for Entry Listeners
         private class UidListEntryListener
@@ -284,12 +285,15 @@ namespace NetworkTables
                 if (m_active) return;
                 m_active = true;
             }
+            /*
             m_thread = new Thread(ThreadMain)
             {
                 IsBackground = true,
                 Name = "Notifier Thread"
             };
             m_thread.Start();
+            */
+            m_thread = Task.Factory.StartNew(ThreadMain, TaskCreationOptions.LongRunning);
         }
 
         public void Stop()
@@ -297,7 +301,7 @@ namespace NetworkTables
             m_active = false;
             //Notify condition so thread terminates.
             m_cond.Set();
-            m_thread?.Join();
+            m_thread?.Wait();
         }
 
         public bool LocalNotifiers()

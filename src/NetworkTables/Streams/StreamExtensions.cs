@@ -35,10 +35,6 @@ namespace NetworkTables.Streams
                         errorCode = (int)sx.SocketErrorCode;
                         break;
                     }
-                    else
-                    {
-                        Thread.Sleep(1);
-                    }
                 }
             }
 

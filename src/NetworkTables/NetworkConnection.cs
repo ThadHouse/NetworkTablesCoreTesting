@@ -10,6 +10,7 @@ using NetworkTables.Wire;
 using static NetworkTables.Logging.Logger;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace NetworkTables
 {
@@ -60,8 +61,8 @@ namespace NetworkTables
 
         private ProcessIncomingFunc m_processIncoming;
 
-        private Thread m_readThread;
-        private Thread m_writeThread;
+        private Task m_readThread;
+        private Task m_writeThread;
 
         private State m_state;
 
@@ -129,6 +130,7 @@ namespace NetworkTables
             // clear queue
             while (m_outgoing.Count != 0) m_outgoing.Take();
 
+            /*
             //Start Threads
             m_writeThread = new Thread(WriteThreadMain)
             {
@@ -142,7 +144,11 @@ namespace NetworkTables
                 IsBackground = true,
                 Name = "Connection Read Thread"
             };
+
             m_readThread.Start();
+            */
+            m_writeThread = Task.Factory.StartNew(WriteThreadMain, TaskCreationOptions.LongRunning);
+            m_readThread = Task.Factory.StartNew(ReadThreadMain, TaskCreationOptions.LongRunning);
         }
 
         public void Stop()
@@ -158,8 +164,8 @@ namespace NetworkTables
             m_outgoing.Add(new List<Message>());
 
             //Wait for our threads to detach from each.
-            m_writeThread?.Join();
-            m_readThread?.Join();
+            m_writeThread?.Wait();
+            m_readThread?.Wait();
 
             // clear the queue
             while (m_outgoing.Count != 0) m_outgoing.Take();

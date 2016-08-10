@@ -51,12 +51,15 @@ namespace NetworkTables
                 if (Active) return;
                 Active = true;
             }
+            /*
             m_thread = new Thread(ThreadMain)
             {
                 Name = "Rpc Thread",
                 IsBackground = true
             };
             m_thread.Start();
+            */
+            m_thread = Task.Factory.StartNew(ThreadMain, TaskCreationOptions.LongRunning);
         }
 
         public void Stop()
@@ -66,7 +69,7 @@ namespace NetworkTables
             {
                 m_callCond.Set();
                 //Join our dispatch thread.
-                m_thread?.Join();
+                m_thread?.Wait();
             }
         }
 
@@ -255,7 +258,7 @@ namespace NetworkTables
         private readonly Queue<RpcCall> m_callQueue = new Queue<RpcCall>();
         private readonly Queue<RpcCall> m_pollQueue = new Queue<RpcCall>();
 
-        private Thread m_thread;
+        private Task m_thread;
 
 
         private readonly object m_mutex = new object();

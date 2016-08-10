@@ -60,14 +60,6 @@
       "dependencies": {
         "NETStandard.Library": "1.6.0"
       }
-    },
-    "uap10": {
-      "buildOptions": {
-        "define": [ "NETSTANDARD", "NETSTANDARD1_4" ]
-      },
-      "dependencies": {
-        "NETStandard.Library": "1.6.0"
-      }
     }
   },
   "configurations": {

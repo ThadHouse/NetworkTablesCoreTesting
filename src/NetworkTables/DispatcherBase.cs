@@ -5,6 +5,7 @@ using NetworkTables.TcpSockets;
 using static NetworkTables.Logging.Logger;
 using NetworkTables.Extensions;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace NetworkTables
 {
@@ -28,9 +29,9 @@ namespace NetworkTables
         private readonly object m_userMutex = new object();
 
         private bool m_active;
-        private Thread m_clientServerThread;
+        private Task m_clientServerThread;
         private List<NetworkConnection> m_connections = new List<NetworkConnection>();
-        private Thread m_dispatchThread;
+        private Task m_dispatchThread;
         private bool m_doFlush;
         private bool m_doReconnect = true;
         private string m_identity = "";
@@ -125,6 +126,7 @@ namespace NetworkTables
             //Bind SetOutgoing
             m_storage.SetOutgoing(QueueOutgoing, m_server);
 
+            /*
             //Start our threads
             m_dispatchThread = new Thread(DispatchThreadMain)
             {
@@ -139,6 +141,9 @@ namespace NetworkTables
                 Name = "Client Server Thread"
             };
             m_clientServerThread.Start();
+            */
+            m_dispatchThread = Task.Factory.StartNew(DispatchThreadMain, TaskCreationOptions.LongRunning);
+            m_clientServerThread = Task.Factory.StartNew(ServerThreadMain, TaskCreationOptions.LongRunning);
         }
 
 
@@ -161,6 +166,7 @@ namespace NetworkTables
             //Bind SetOutgoing
             m_storage.SetOutgoing(QueueOutgoing, m_server);
 
+            /*
             //Start our threads
             m_dispatchThread = new Thread(DispatchThreadMain)
             {
@@ -175,6 +181,9 @@ namespace NetworkTables
                 Name = "Client Server Thread"
             };
             m_clientServerThread.Start();
+            */
+            m_dispatchThread = Task.Factory.StartNew(DispatchThreadMain, TaskCreationOptions.LongRunning);
+            m_clientServerThread = Task.Factory.StartNew(ClientThreadMain, TaskCreationOptions.LongRunning);
         }
 
 
@@ -196,9 +205,9 @@ namespace NetworkTables
             m_serverAccepter?.Shutdown();
 
             //Join our dispatch thread.
-            m_dispatchThread?.Join();
+            m_dispatchThread?.Wait();
             //Join our Client Server Thread
-            m_clientServerThread?.Join();
+            m_clientServerThread?.Wait();
 
             List<NetworkConnection> conns = new List<NetworkConnection>();
             lock (m_userMutex)
@@ -397,7 +406,9 @@ namespace NetworkTables
             while (m_active)
             {
                 //Sleep between retries
-                Thread.Sleep(TimeSpan.FromMilliseconds(250));
+                Task.Delay(TimeSpan.FromMilliseconds(250)).Wait();
+
+                //Thread.Sleep(TimeSpan.FromMilliseconds(250));
                 Connector connect;
 
                 lock (m_userMutex)
