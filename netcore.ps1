@@ -106,9 +106,9 @@ function Build {
   exec { & dotnet restore }
   echo $configuration
   
-  exec { & dotnet build src\NetworkTables $configuration $revision }
+  exec { & dotnet build src\FRC.NetworkTables $configuration $revision }
   
-  exec { & dotnet build src\NetworkTables.Core $configuration $revision }
+  exec { & dotnet build src\FRC.NetworkTables.Core $configuration $revision }
 }
 
 function Test {
@@ -185,11 +185,11 @@ function UpdateXml {
 
    .\NuGet.exe install EWSoftware.SHFB.NETFramework -Version 4.6 -o buildTemp
    
-   Copy-Item src\NetworkTables\$libLoc\net451\NetworkTables.dll buildTemp\NetworkTables.dll
-   Copy-Item src\NetworkTables\$libLoc\net451\NetworkTables.xml buildTemp\NetworkTables.xml
+   Copy-Item src\FRC.NetworkTables\$libLoc\net451\FRC.NetworkTables.dll buildTemp\FRC.NetworkTables.dll
+   Copy-Item src\FRC.NetworkTables\$libLoc\net451\FRC.NetworkTables.xml buildTemp\FRC.NetworkTables.xml
    
-   Copy-Item src\NetworkTables.Core\$libLoc\net451\NetworkTables.Core.dll buildTemp\NetworkTables.Core.dll
-   Copy-Item src\NetworkTables.Core\$libLoc\net451\NetworkTables.Core.xml buildTemp\NetworkTables.Core.xml
+   Copy-Item src\FRC.NetworkTables.Core\$libLoc\net451\FRC.NetworkTables.Core.dll buildTemp\FRC.NetworkTables.Core.dll
+   Copy-Item src\FRC.NetworkTables.Core\$libLoc\net451\FRC.NetworkTables.Core.xml buildTemp\FRC.NetworkTables.Core.xml
    
    EnsurePsbuildInstalled
    
@@ -199,33 +199,33 @@ function UpdateXml {
     $sandConfig = "Release"
    }
    
-   & 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe' Sandcastle\NetworkTables.NetCore.shfbproj /property:Configuration=Release /v:m
+   & 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe' Sandcastle\FRC.NetworkTables.NetCore.shfbproj /property:Configuration=Release /v:m
 
-   Copy-Item Sandcastle\Help\NetworkTables.xml src\NetworkTables\$libLoc\net451\NetworkTables.xml
-   Copy-Item Sandcastle\Help\NetworkTables.xml src\NetworkTables\$libLoc\netstandard1.3\NetworkTables.xml
+   Copy-Item Sandcastle\Help\NetworkTables.xml src\FRC.NetworkTables\$libLoc\net451\FRC.NetworkTables.xml
+   Copy-Item Sandcastle\Help\NetworkTables.xml src\FRC.NetworkTables\$libLoc\netstandard1.3\FRC.NetworkTables.xml
    
-   & 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe' Sandcastle\NetworkTables.Core.NetCore.shfbproj /property:Configuration=Release /v:m
+   & 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe' Sandcastle\FRC.NetworkTables.Core.NetCore.shfbproj /property:Configuration=Release /v:m
    
-   Copy-Item Sandcastle\Help\NetworkTables.Core.xml src\NetworkTables.Core\$libLoc\net451\NetworkTables.Core.xml
-   Copy-Item Sandcastle\Help\NetworkTables.Core.xml src\NetworkTables.Core\$libLoc\netstandard1.5\NetworkTables.Core.xml
+   Copy-Item Sandcastle\Help\NetworkTables.Core.xml src\FRC.NetworkTables.Core\$libLoc\net451\FRC.NetworkTables.Core.xml
+   Copy-Item Sandcastle\Help\NetworkTables.Core.xml src\FRC.NetworkTables.Core\$libLoc\netstandard1.5\FRC.NetworkTables.Core.xml
 }
 
 if ($env:APPVEYOR) {
 
  #Supress compiler xml warnings
-  $netTablesJson = Get-Content 'src\NetworkTables\project.json' -raw | ConvertFrom-Json
+  $netTablesJson = Get-Content 'src\FRC.NetworkTables\project.json' -raw | ConvertFrom-Json
   try{
   $netTablesJson.buildOptions | Add-Member -Name "nowarn" -value @("CS1591") -MemberType NoteProperty
     }
   catch {}
-  $netTablesJson | ConvertTo-Json -Depth 5 | Set-Content 'src\NetworkTables\project.json'
+  $netTablesJson | ConvertTo-Json -Depth 5 | Set-Content 'src\FRC.NetworkTables\project.json'
   
-  $netTablesJson = Get-Content 'src\NetworkTables.Core\project.json' -raw | ConvertFrom-Json
+  $netTablesJson = Get-Content 'src\FRC.NetworkTables.Core\project.json' -raw | ConvertFrom-Json
   try{
   $netTablesJson.buildOptions | Add-Member -Name "nowarn" -value @("CS1591") -MemberType NoteProperty
   }
   catch {}
-  $netTablesJson | ConvertTo-Json -Depth 5 | Set-Content 'src\NetworkTables.Core\project.json'
+  $netTablesJson | ConvertTo-Json -Depth 5 | Set-Content 'src\FRC.NetworkTables.Core\project.json'
 }
 
 if ($release) {
@@ -234,16 +234,16 @@ if ($release) {
  }
 
  # Remove beta defintion from project.json files
-  Copy-Item src\NetworkTables\project.json buildTemp\NetworkTables.projectjson
-  Copy-Item src\NetworkTables.Core\project.json buildTemp\NetworkTables.Core.projectjson
+  Copy-Item src\FRC.NetworkTables\project.json buildTemp\FRC.NetworkTables.projectjson
+  Copy-Item src\FRC.NetworkTables.Core\project.json buildTemp\FRC.NetworkTables.Core.projectjson
   
-  $netTablesJson = Get-Content 'src\NetworkTables\project.json' -raw | ConvertFrom-Json
+  $netTablesJson = Get-Content 'src\FRC.NetworkTables\project.json' -raw | ConvertFrom-Json
   $netTablesJson.version = $netTablesJson.version.Substring(0, $netTablesJson.version.IndexOf("-"))
-  $netTablesJson | ConvertTo-Json -Depth 5 | Set-Content 'src\NetworkTables\project.json'
+  $netTablesJson | ConvertTo-Json -Depth 5 | Set-Content 'src\FRC.NetworkTables\project.json'
   
-  $netTablesJson = Get-Content 'src\NetworkTables.Core\project.json' -raw | ConvertFrom-Json
+  $netTablesJson = Get-Content 'src\FRC.NetworkTables.Core\project.json' -raw | ConvertFrom-Json
   $netTablesJson.version = $netTablesJson.version.Substring(0, $netTablesJson.version.IndexOf("-"))
-  $netTablesJson | ConvertTo-Json -Depth 5 | Set-Content 'src\NetworkTables.Core\project.json'
+  $netTablesJson | ConvertTo-Json -Depth 5 | Set-Content 'src\FRC.NetworkTables.Core\project.json'
  
 }
 
@@ -265,9 +265,9 @@ if ($pack) {
 
 if ($release) {
  # Add beta definition back into project.json
- Copy-Item buildTemp\NetworkTables.projectjson src\NetworkTables\project.json
- Copy-Item buildTemp\NetworkTables.Core.projectjson src\NetworkTables.Core\project.json
+ Copy-Item buildTemp\FRC.NetworkTables.projectjson src\FRC.NetworkTables\project.json
+ Copy-Item buildTemp\FRC.NetworkTables.Core.projectjson src\FRC.NetworkTables.Core\project.json
  
- Remove-Item buildTemp\NetworkTables.projectjson
- Remove-Item buildTemp\NetworkTables.Core.projectjson
+ Remove-Item buildTemp\FRC.NetworkTables.projectjson
+ Remove-Item buildTemp\FRC.NetworkTables.Core.projectjson
 }

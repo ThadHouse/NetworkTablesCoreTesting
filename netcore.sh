@@ -21,8 +21,8 @@ fi
 function Build {
   dotnet restore
 
-  dotnet build ./src/NetworkTables $configuration
-  dotnet build ./src/NetworkTables.Core $configuration
+  dotnet build ./src/FRC.NetworkTables $configuration
+  dotnet build ./src/FRC.NetworkTables.Core $configuration
 }
 
 function Test {
