@@ -166,9 +166,9 @@ function Test {
 function Pack { 
   if (Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 
-  exec { & dotnet pack src\NetworkTables $configuration $revision --no-build -o .\artifacts }
+  exec { & dotnet pack src\FRC.NetworkTables $configuration $revision --no-build -o .\artifacts }
   
-  exec { & dotnet pack src\NetworkTables.Core $configuration $revision --no-build -o .\artifacts }
+  exec { & dotnet pack src\FRC.NetworkTables.Core $configuration $revision --no-build -o .\artifacts }
 
   if ($env:APPVEYOR) {
     Get-ChildItem .\artifacts\*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
@@ -199,12 +199,12 @@ function UpdateXml {
     $sandConfig = "Release"
    }
    
-   & 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe' Sandcastle\FRC.NetworkTables.NetCore.shfbproj /property:Configuration=Release /v:m
+   & 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe' Sandcastle\NetworkTables.NetCore.shfbproj /property:Configuration=Release /v:m
 
    Copy-Item Sandcastle\Help\FRC.NetworkTables.xml src\FRC.NetworkTables\$libLoc\net451\FRC.NetworkTables.xml
    Copy-Item Sandcastle\Help\FRC.NetworkTables.xml src\FRC.NetworkTables\$libLoc\netstandard1.3\FRC.NetworkTables.xml
    
-   & 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe' Sandcastle\FRC.NetworkTables.Core.NetCore.shfbproj /property:Configuration=Release /v:m
+   & 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe' Sandcastle\NetworkTables.Core.NetCore.shfbproj /property:Configuration=Release /v:m
    
    Copy-Item Sandcastle\Help\FRC.NetworkTables.Core.xml src\FRC.NetworkTables.Core\$libLoc\net451\FRC.NetworkTables.Core.xml
    Copy-Item Sandcastle\Help\FRC.NetworkTables.Core.xml src\FRC.NetworkTables.Core\$libLoc\netstandard1.5\FRC.NetworkTables.Core.xml
