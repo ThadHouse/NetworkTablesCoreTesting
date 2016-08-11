@@ -27,8 +27,8 @@
       <Argument Key="maxVersionParts" Value="" xmlns="" />
     </TransformComponentArguments>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\buildTemp\NetworkTables.Core.dll" />
-      <DocumentationSource sourceFile="..\buildTemp\NetworkTables.Core.xml" />
+      <DocumentationSource sourceFile="..\buildTemp\FRC.NetworkTables.Core.dll" />
+      <DocumentationSource sourceFile="..\buildTemp\FRC.NetworkTables.Core.xml" />
     </DocumentationSources>
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
     <HelpFileFormat>Website</HelpFileFormat>
