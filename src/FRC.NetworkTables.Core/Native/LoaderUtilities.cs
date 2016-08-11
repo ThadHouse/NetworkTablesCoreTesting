@@ -141,25 +141,25 @@ namespace NetworkTables.Core.Native
             switch (type)
             {
                 case OsType.Windows32:
-                    embeddedResourceLocation = "NetworkTables.Core.NativeLibraries.x86.ntcore.dll";
+                    embeddedResourceLocation = "FRC.NetworkTables.Core.NativeLibraries.x86.ntcore.dll";
                     break;
                 case OsType.Windows64:
-                    embeddedResourceLocation = "NetworkTables.Core.NativeLibraries.amd64.ntcore.dll";
+                    embeddedResourceLocation = "FRC.NetworkTables.Core.NativeLibraries.amd64.ntcore.dll";
                     break;
                 case OsType.Linux32:
-                    embeddedResourceLocation = "NetworkTables.Core.NativeLibraries.x86.libntcore.so";
+                    embeddedResourceLocation = "FRC.NetworkTables.Core.NativeLibraries.x86.libntcore.so";
                     break;
                 case OsType.Linux64:
-                    embeddedResourceLocation = "NetworkTables.Core.NativeLibraries.amd64.libntcore.so";
+                    embeddedResourceLocation = "FRC.NetworkTables.Core.NativeLibraries.amd64.libntcore.so";
                     break;
                 case OsType.MacOs32:
-                    embeddedResourceLocation = "NetworkTables.Core.NativeLibraries.x86.libntcore.dylib";
+                    embeddedResourceLocation = "FRC.NetworkTables.Core.NativeLibraries.x86.libntcore.dylib";
                     break;
                 case OsType.MacOs64:
-                    embeddedResourceLocation = "NetworkTables.Core.NativeLibraries.amd64.libntcore.dylib";
+                    embeddedResourceLocation = "FRC.NetworkTables.Core.NativeLibraries.amd64.libntcore.dylib";
                     break;
                 case OsType.RoboRio:
-                    embeddedResourceLocation = "NetworkTables.Core.NativeLibraries.roborio.libntcore.so";
+                    embeddedResourceLocation = "FRC.NetworkTables.Core.NativeLibraries.roborio.libntcore.so";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
