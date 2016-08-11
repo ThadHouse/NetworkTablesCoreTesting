@@ -56,7 +56,7 @@ namespace NetworkTables.Core.Test.SpecScanners
             var pathToSolution = FindRootSolutionDirectory();
             var p = Path.DirectorySeparatorChar;
             Assert.That(pathToSolution, Is.Not.Null);
-            var file = $"{pathToSolution}{p}src{p}NetworkTables.Core{p}Native{p}Interop.cs";
+            var file = $"{pathToSolution}{p}src{p}FRC.NetworkTables.Core{p}Native{p}Interop.cs";
             HALDelegateClass cs = new HALDelegateClass
             {
                 ClassName = "",
@@ -89,7 +89,7 @@ namespace NetworkTables.Core.Test.SpecScanners
             var pathToSolution = FindRootSolutionDirectory();
             var p = Path.DirectorySeparatorChar;
             Assert.That(pathToSolution, Is.Not.Null);
-            var dir = $"{pathToSolution}{p}src{p}NetworkTables.Core{p}Native";
+            var dir = $"{pathToSolution}{p}src{p}FRC.NetworkTables.Core{p}Native";
             foreach (var file in Directory.GetFiles(dir, "*.cs"))
             {
                 if (!file.ToLower().Contains("Interop")) continue;
@@ -134,7 +134,7 @@ namespace NetworkTables.Core.Test.SpecScanners
             var pathToSolution = FindRootSolutionDirectory();
             var ps = Path.DirectorySeparatorChar;
             Assert.That(pathToSolution, Is.Not.Null);
-            var dirToNetworkTablesLib = $"{pathToSolution}{ps}src{ps}NetworkTables.Core";
+            var dirToNetworkTablesLib = $"{pathToSolution}{ps}src{ps}FRC.NetworkTables.Core";
 
             // Start the child process.
             Process p = new Process();
