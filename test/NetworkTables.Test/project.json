@@ -4,7 +4,7 @@
   "dependencies": {
     "dotnet-test-nunit": "3.4.0-beta-1",
     "Microsoft.NETCore.Platforms": "1.0.1",
-    "NetworkTables": {
+    "FRC.NetworkTables": {
       "target": "project"
     },
     "NUnit": "3.4.1"

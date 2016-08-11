@@ -74,7 +74,7 @@
     <Compile Include="TestWireEncoder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NetworkTables.Core\NetworkTables.Core.csproj">
+    <ProjectReference Include="..\..\src\FRC.NetworkTables.Core\NetworkTables.Core.csproj">
       <Project>{7bd949db-c15f-436b-bdd4-2a47ae80a832}</Project>
       <Name>NetworkTables.Core</Name>
     </ProjectReference>

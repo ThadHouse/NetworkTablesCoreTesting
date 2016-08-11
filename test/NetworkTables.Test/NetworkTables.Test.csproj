@@ -83,7 +83,7 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NetworkTables\NetworkTables.csproj">
+    <ProjectReference Include="..\..\src\FRC.NetworkTables\NetworkTables.csproj">
       <Project>{6711efb4-3fd9-45e5-b98e-be6d5a480245}</Project>
       <Name>NetworkTables</Name>
     </ProjectReference>
