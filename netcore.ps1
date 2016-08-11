@@ -201,13 +201,13 @@ function UpdateXml {
    
    & 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe' Sandcastle\FRC.NetworkTables.NetCore.shfbproj /property:Configuration=Release /v:m
 
-   Copy-Item Sandcastle\Help\NetworkTables.xml src\FRC.NetworkTables\$libLoc\net451\FRC.NetworkTables.xml
-   Copy-Item Sandcastle\Help\NetworkTables.xml src\FRC.NetworkTables\$libLoc\netstandard1.3\FRC.NetworkTables.xml
+   Copy-Item Sandcastle\Help\FRC.NetworkTables.xml src\FRC.NetworkTables\$libLoc\net451\FRC.NetworkTables.xml
+   Copy-Item Sandcastle\Help\FRC.NetworkTables.xml src\FRC.NetworkTables\$libLoc\netstandard1.3\FRC.NetworkTables.xml
    
    & 'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe' Sandcastle\FRC.NetworkTables.Core.NetCore.shfbproj /property:Configuration=Release /v:m
    
-   Copy-Item Sandcastle\Help\NetworkTables.Core.xml src\FRC.NetworkTables.Core\$libLoc\net451\FRC.NetworkTables.Core.xml
-   Copy-Item Sandcastle\Help\NetworkTables.Core.xml src\FRC.NetworkTables.Core\$libLoc\netstandard1.5\FRC.NetworkTables.Core.xml
+   Copy-Item Sandcastle\Help\FRC.NetworkTables.Core.xml src\FRC.NetworkTables.Core\$libLoc\net451\FRC.NetworkTables.Core.xml
+   Copy-Item Sandcastle\Help\FRC.NetworkTables.Core.xml src\FRC.NetworkTables.Core\$libLoc\netstandard1.5\FRC.NetworkTables.Core.xml
 }
 
 if ($env:APPVEYOR) {
